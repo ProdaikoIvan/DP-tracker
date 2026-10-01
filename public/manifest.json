@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "DP Slot Tracker",
+  "version": "1.0.0",
+  "description": "DP Slot Tracker Extension",
+  "action": {
+    "default_popup": "index.html"
+  }
+}

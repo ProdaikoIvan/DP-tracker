@@ -1,0 +1,77 @@
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.countrySection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.countryTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1f2937;
+}
+
+.flag {
+  font-size: 18px;
+}
+
+.citiesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.cityCard {
+  background-color: var(--btn-bg);
+  border: 1px solid #2d3748;
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.cityCard:hover {
+  background-color: var(--btn-hover);
+  border-color: var(--primary-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cityHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.pinIcon {
+  color: var(--primary-green);
+  flex-shrink: 0;
+}
+
+.cityName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.address {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  padding-left: 22px; /* Вирівнювання тексту під назвою (відступ іконки 16px + 6px gap) */
+  line-height: 1.4;
+}
