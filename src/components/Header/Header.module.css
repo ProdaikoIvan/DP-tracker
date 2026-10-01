@@ -4,7 +4,7 @@
   align-items: center;
   padding: 12px 16px;
   background-color: var(--header-bg);
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .leftSection {
@@ -55,7 +55,7 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-default);
 }
 
 .iconButton:hover {
@@ -63,10 +63,10 @@
 }
 
 .activeNotification {
-  background-color: rgba(0, 208, 108, 0.1);
-  border: 1px solid rgba(0, 208, 108, 0.2);
+  background-color: var(--primary-green-translucent);
+  border: 1px solid var(--primary-green-border);
 }
 
 .activeNotification:hover {
-  background-color: rgba(0, 208, 108, 0.2);
+  background-color: var(--primary-green-border);
 }

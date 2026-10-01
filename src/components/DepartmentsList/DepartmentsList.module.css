@@ -20,7 +20,7 @@
   gap: 8px;
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .flag {
@@ -34,19 +34,19 @@
 }
 
 .cityCard {
-  background-color: var(--btn-bg);
-  border: 1px solid #2d3748;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color-light);
   border-radius: 8px;
   padding: 12px;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-default);
   cursor: pointer;
 }
 
 .cityCard:hover {
-  background-color: var(--btn-hover);
+  background-color: var(--bg-card-hover);
   border-color: var(--primary-green);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .cityHeader {
@@ -72,6 +72,6 @@
   font-size: 12px;
   color: var(--text-secondary);
   margin: 0;
-  padding-left: 22px; /* Вирівнювання тексту під назвою (відступ іконки 16px + 6px gap) */
+  padding-left: 22px;
   line-height: 1.4;
 }

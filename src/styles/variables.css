@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --bg-dark: #0f141f;
+  --header-bg: #111827;
+  --bg-card: #1f2937;
+  --bg-card-hover: #374151;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  
+  --primary-green: #00d06c;
+  --primary-green-translucent: rgba(0, 208, 108, 0.1);
+  --primary-green-border: rgba(0, 208, 108, 0.2);
+  
+  --btn-bg: #1f2937;
+  --btn-hover: #374151;
+
+  /* Borders */
+  --border-color: #1f2937;
+  --border-color-light: #2d3748;
+
+  /* Transitions */
+  --transition-default: all 0.2s ease-in-out;
+
+  /* Shadows */
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
