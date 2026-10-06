@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import { MapPin, Play, Pause, Eye } from 'lucide-react';
 import IntervalSelector from '../IntervalSelector/IntervalSelector';
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
-import SlotsModal from '../SlotsModal/SlotsModal';
+import { SlotsModal, SlotDetails } from '../SlotsModal';
 import { getActiveTab } from '../../services/tabService';
 import { checkAvailableSlots } from '../../services/slotService';
 import { useSlots } from '../../context/SlotsContext';
 import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
 import styles from './TrackerView.module.css';
 
-const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
+const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
   const [isTracking, setIsTracking] = useState(false);
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { foundSlots, foundAt, saveSlots, clearSlots } = useSlots();
+  const { getServiceSlots, saveSlotsForService, clearSlotsForService } = useSlots();
+
+  const serviceSlots = getServiceSlots(city.name);
+  const foundSlots = serviceSlots?.slots ?? [];
+  const foundAt = serviceSlots?.foundAt ?? '';
 
   const checkSlots = async () => {
     const tab = await getActiveTab();
@@ -24,7 +28,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
       const now = new Date();
       const timestamp = `${now.toLocaleDateString('uk-UA')} о ${now.toLocaleTimeString('uk-UA')}`;
       setIsTracking(false);
-      void saveSlots(slots, timestamp);
+      void saveSlotsForService(city.name, slots, timestamp);
     }
   };
 
@@ -33,7 +37,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
     setIsTracking(nextState);
 
     if (nextState) {
-      void clearSlots();
+      void clearSlotsForService(city.name);
       void checkSlots();
     }
   };
@@ -44,13 +48,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
     <div className={styles.container}>
       <div className={`${styles.serviceCard} ${isTracking ? styles.serviceCardActive : ''}`}>
         <div className={styles.serviceInfo}>
-          <div className={styles.countryBadge}>
-            <span>{country.flag}</span>
-            <span>{country.name}</span>
-          </div>
-
           <h2 className={styles.serviceTitle}>{city.name}</h2>
-
           <div className={styles.addressRow}>
             <MapPin size={16} className={styles.pinIcon} />
             <span>{city.address}</span>
@@ -105,9 +103,14 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
       <SlotsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        slots={foundSlots}
-        foundAt={foundAt}
-      />
+        title={`${city.name}: Вільні дати (${foundSlots.length})`}
+      >
+        <SlotDetails
+          cityName={city.name}
+          foundAt={foundAt}
+          slots={foundSlots}
+        />
+      </SlotsModal>
     </div>
   );
 };

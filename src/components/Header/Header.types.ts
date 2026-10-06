@@ -1,5 +1,7 @@
 export interface HeaderProps {
   onBack?: () => void;
   showBackButton?: boolean;
-  onRefresh?: () => void;
+  onReset?: () => void;
+  onOpenStats?: () => void;
+  hasSlots?: boolean;
 }

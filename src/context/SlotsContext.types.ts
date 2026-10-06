@@ -1,16 +1,21 @@
 import type { ReactNode } from 'react';
 import type { SlotDay } from '../services/slotService.types';
 
-export interface StoredSlotsData {
+export interface ServiceSlotsData {
+  cityName: string;
   slots: SlotDay[];
   foundAt: string;
 }
 
+export type SlotsDataMap = Record<string, ServiceSlotsData>;
+
 export interface SlotsContextValue {
-  foundSlots: SlotDay[];
-  foundAt: string;
-  saveSlots: (slots: SlotDay[], foundAt: string) => Promise<void>;
-  clearSlots: () => Promise<void>;
+  slotsMap: SlotsDataMap;
+  totalSlots: number;
+  getServiceSlots: (cityName: string) => ServiceSlotsData | undefined;
+  saveSlotsForService: (cityName: string, slots: SlotDay[], foundAt: string) => Promise<void>;
+  clearSlotsForService: (cityName: string) => Promise<void>;
+  clearAllSlots: () => Promise<void>;
 }
 
 export interface SlotsProviderProps {

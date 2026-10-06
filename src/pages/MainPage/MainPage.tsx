@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header/Header';
 import DepartmentsList from '../../components/DepartmentsList/DepartmentsList';
 import TrackerView from '../../components/TrackerView/TrackerView';
+import { SlotsModal, AllSlotsList } from '../../components/SlotsModal';
 import { detectCurrentDepartment, openDepartmentTab } from '../../services/tabService';
 import { useSlots } from '../../context/SlotsContext';
 import type { SelectedDepartment } from '../../types/departments.types';
@@ -9,15 +10,16 @@ import type { MainPageProps } from './MainPage.types';
 
 const MainPage: React.FC<MainPageProps> = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
-  const { clearSlots } = useSlots();
+  const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const { slotsMap, totalSlots, clearAllSlots } = useSlots();
 
   const handleSelectDepartment = (dept: SelectedDepartment) => {
     setSelectedDepartment(dept);
     void openDepartmentTab(dept.city.url);
   };
 
-  const handleRefresh = async () => {
-    await clearSlots();
+  const handleReset = async () => {
+    await clearAllSlots();
     const dept = await detectCurrentDepartment();
     setSelectedDepartment(dept);
   };
@@ -41,18 +43,25 @@ const MainPage: React.FC<MainPageProps> = () => {
       <Header
         showBackButton={!!selectedDepartment}
         onBack={() => setSelectedDepartment(null)}
-        onRefresh={handleRefresh}
+        onReset={handleReset}
+        onOpenStats={() => setIsStatsModalOpen(true)}
+        hasSlots={totalSlots > 0}
       />
       <main className="main-content">
         {selectedDepartment ? (
-          <TrackerView
-            city={selectedDepartment.city}
-            country={selectedDepartment.country}
-          />
+          <TrackerView city={selectedDepartment.city} />
         ) : (
           <DepartmentsList onSelectDepartment={handleSelectDepartment} />
         )}
       </main>
+
+      <SlotsModal
+        isOpen={isStatsModalOpen}
+        onClose={() => setIsStatsModalOpen(false)}
+        title="Статистика вільних дат"
+      >
+        <AllSlotsList slotsMap={slotsMap} />
+      </SlotsModal>
     </div>
   );
 };

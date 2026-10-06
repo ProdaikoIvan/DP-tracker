@@ -15,7 +15,6 @@
   justify-content: space-between;
   gap: 16px;
   box-shadow: var(--shadow-md);
-  transition: var(--transition-default);
 }
 
 .serviceCardActive {
@@ -27,21 +26,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 0;
-}
-
-.countryBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background-color: var(--badge-bg);
-  padding: 2px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  width: fit-content;
 }
 
 .serviceTitle {
@@ -120,7 +104,13 @@
   font-weight: 600;
 }
 
-.statusDotActive, .statusDotPaused { width: 8px; height: 8px; border-radius: 50%; }
+.statusDotActive,
+.statusDotPaused {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
 .statusDotActive { background-color: var(--status-active); box-shadow: var(--shadow-glow); }
 .statusDotPaused { background-color: var(--status-paused); }
 .statusTextActive { color: var(--status-active); }

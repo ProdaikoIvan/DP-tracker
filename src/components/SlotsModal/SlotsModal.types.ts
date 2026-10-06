@@ -1,8 +1,8 @@
-import type { SlotDay } from '../../services/slotService.types';
+import type { ReactNode } from 'react';
 
 export interface SlotsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  slots: SlotDay[];
-  foundAt: string;
+  title: string;
+  children: ReactNode;
 }
