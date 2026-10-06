@@ -34,8 +34,9 @@ const Header: React.FC<HeaderProps> = ({
         )}
         <button
           type="button"
-          className={styles.iconButton}
+          className={`${styles.iconButton} ${hasSlots ? styles.active : ''}`}
           onClick={onReset}
+          disabled={!hasSlots}
           aria-label="Скинути"
           title="Скинути"
         >
@@ -43,21 +44,28 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           type="button"
-          className={`${styles.iconButton} ${hasSlots ? styles.activeNotification : ''}`}
+          className={`${styles.iconButton} ${hasSlots ? styles.active : ''}`}
           onClick={onOpenStats}
+          disabled={!hasSlots}
           aria-label="Статистика вільних дат"
           title="Статистика вільних дат"
         >
           <CalendarDays size={18} />
         </button>
         <button
-          className={`${styles.iconButton} ${styles.activeNotification}`}
+          type="button"
+          className={styles.iconButton}
           aria-label="Сповіщення"
           title="Сповіщення"
         >
           <Bell size={18} />
         </button>
-        <button className={styles.iconButton} aria-label="Налаштування" title="Налаштування">
+        <button
+          type="button"
+          className={styles.iconButton}
+          aria-label="Налаштування"
+          title="Налаштування"
+        >
           <Settings size={18} />
         </button>
       </div>

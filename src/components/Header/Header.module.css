@@ -63,19 +63,24 @@
   transition: var(--transition-fast);
 }
 
-.iconButton:hover {
+.iconButton:hover:not(:disabled) {
   background-color: var(--btn-hover);
   color: var(--text-primary);
   border-color: var(--border-color-light);
 }
 
-.activeNotification {
+.iconButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.active {
   background-color: var(--primary-green-translucent);
   border: 1px solid var(--primary-green-border);
   color: var(--primary-green);
 }
 
-.activeNotification:hover {
+.active:hover:not(:disabled) {
   background-color: var(--primary-green-border);
   color: var(--primary-green);
   box-shadow: var(--shadow-glow);

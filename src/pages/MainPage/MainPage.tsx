@@ -3,6 +3,7 @@ import Header from '../../components/Header/Header';
 import DepartmentsList from '../../components/DepartmentsList/DepartmentsList';
 import TrackerView from '../../components/TrackerView/TrackerView';
 import { SlotsModal, AllSlotsList } from '../../components/SlotsModal';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { detectCurrentDepartment, openDepartmentTab } from '../../services/tabService';
 import { useSlots } from '../../context/SlotsContext';
 import type { SelectedDepartment } from '../../types/departments.types';
@@ -11,6 +12,7 @@ import type { MainPageProps } from './MainPage.types';
 const MainPage: React.FC<MainPageProps> = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const { slotsMap, totalSlots, clearAllSlots } = useSlots();
 
   const handleSelectDepartment = (dept: SelectedDepartment) => {
@@ -22,6 +24,19 @@ const MainPage: React.FC<MainPageProps> = () => {
     await clearAllSlots();
     const dept = await detectCurrentDepartment();
     setSelectedDepartment(dept);
+  };
+
+  const handleResetClick = () => {
+    if (totalSlots > 0) {
+      setIsResetConfirmOpen(true);
+    } else {
+      void handleReset();
+    }
+  };
+
+  const handleConfirmReset = async () => {
+    setIsResetConfirmOpen(false);
+    await handleReset();
   };
 
   useEffect(() => {
@@ -43,7 +58,7 @@ const MainPage: React.FC<MainPageProps> = () => {
       <Header
         showBackButton={!!selectedDepartment}
         onBack={() => setSelectedDepartment(null)}
-        onReset={handleReset}
+        onReset={handleResetClick}
         onOpenStats={() => setIsStatsModalOpen(true)}
         hasSlots={totalSlots > 0}
       />
@@ -62,6 +77,16 @@ const MainPage: React.FC<MainPageProps> = () => {
       >
         <AllSlotsList slotsMap={slotsMap} />
       </SlotsModal>
+
+      <ConfirmModal
+        isOpen={isResetConfirmOpen}
+        title="Скинути дані?"
+        message="Ви впевнені, що хочете видалити всі знайдені слоти?"
+        confirmText="Так"
+        cancelText="Ні"
+        onConfirm={handleConfirmReset}
+        onCancel={() => setIsResetConfirmOpen(false)}
+      />
     </div>
   );
 };
