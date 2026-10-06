@@ -58,6 +58,7 @@ const MainPage: React.FC<MainPageProps> = () => {
         onReset={handleResetClick}
         onOpenStats={() => setIsStatsModalOpen(true)}
         hasSlots={totalSlots > 0}
+        slotsCount={totalSlots}
         isSoundEnabled={isSoundEnabled}
         onToggleSound={toggleSound}
       />

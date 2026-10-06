@@ -9,6 +9,7 @@ const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenStats,
   hasSlots,
+  slotsCount,
   isSoundEnabled,
   onToggleSound,
 }) => {
@@ -46,13 +47,16 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           type="button"
-          className={`${styles.iconButton} ${hasSlots ? styles.active : ''}`}
+          className={`${styles.iconButton} ${styles.statsButton} ${hasSlots ? styles.active : ''}`}
           onClick={onOpenStats}
           disabled={!hasSlots}
           aria-label="Статистика вільних дат"
           title="Статистика вільних дат"
         >
           <CalendarDays size={18} />
+          {hasSlots && (slotsCount ?? 0) > 0 && (
+            <span className={styles.badgeCount}>{slotsCount}</span>
+          )}
         </button>
         <button
           type="button"

@@ -1,5 +1,6 @@
 import { getItem, setItem } from '../services/storageService';
 import { checkAvailableSlots } from '../services/slotService';
+import { stopBadgeBlinking } from '../services/badgeService';
 import {
   TRACKING_STATE_KEY,
   TRACKING_ALARM_NAME,
@@ -38,3 +39,10 @@ chrome.tabs.onRemoved.addListener(async (closedTabId) => {
     await stopTrackingSession(state);
   }
 });
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type === 'STOP_BADGE_BLINK') {
+    void stopBadgeBlinking();
+  }
+});
+

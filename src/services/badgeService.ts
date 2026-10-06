@@ -1,10 +1,25 @@
-import { BADGE_ACTIVE_COLOR } from '../constants/storage.constants';
+import { BADGE_ACTIVE_COLOR, BADGE_ALERT_COLOR } from '../constants/storage.constants';
 
-export const setSlotsBadge = async (count: number): Promise<void> => {
+let blinkInterval: ReturnType<typeof setInterval> | null = null;
+
+export const startBadgeBlinking = async (): Promise<void> => {
+  if (blinkInterval) return;
+  await chrome.action.setBadgeText({ text: '!' });
   await chrome.action.setBadgeBackgroundColor({ color: BADGE_ACTIVE_COLOR });
-  await chrome.action.setBadgeText({ text: count > 0 ? String(count) : '' });
+
+  let isGreen = true;
+  blinkInterval = setInterval(() => {
+    isGreen = !isGreen;
+    void chrome.action.setBadgeBackgroundColor({
+      color: isGreen ? BADGE_ACTIVE_COLOR : BADGE_ALERT_COLOR,
+    });
+  }, 700);
 };
 
-export const clearSlotsBadge = async (): Promise<void> => {
+export const stopBadgeBlinking = async (): Promise<void> => {
+  if (blinkInterval) {
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+  }
   await chrome.action.setBadgeText({ text: '' });
 };

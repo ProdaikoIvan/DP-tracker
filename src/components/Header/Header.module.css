@@ -85,3 +85,27 @@
   color: var(--primary-green);
   box-shadow: var(--shadow-glow);
 }
+
+.statsButton {
+  position: relative;
+}
+
+.badgeCount {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--primary-green);
+  color: var(--bg-dark);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+}

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getItem, setItem, removeItem } from '../services/storageService';
-import { setSlotsBadge, clearSlotsBadge } from '../services/badgeService';
+import { stopBadgeBlinking } from '../services/badgeService';
 import {
   initialTrackingState,
   getStoredTrackingState,
@@ -26,14 +26,7 @@ const SlotsContext = createContext<SlotsContextValue | null>(null);
 export const calculateTotalSlots = (map: SlotsDataMap): number =>
   Object.values(map).reduce((sum, item) => sum + item.slots.length, 0);
 
-const updateBadgeForMap = async (map: SlotsDataMap): Promise<void> => {
-  const total = calculateTotalSlots(map);
-  if (total > 0) {
-    await setSlotsBadge(total);
-  } else {
-    await clearSlotsBadge();
-  }
-};
+
 
 export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [slotsMap, setSlotsMap] = useState<SlotsDataMap>({});
@@ -41,10 +34,12 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [trackingState, setTrackingState] = useState<TrackingState>(initialTrackingState);
 
   useEffect(() => {
+    void stopBadgeBlinking();
+    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => {});
+
     void getItem<SlotsDataMap>(SLOTS_STORAGE_KEY).then((data) => {
       if (data) {
         setSlotsMap(data);
-        void updateBadgeForMap(data);
       }
     });
     void getItem<boolean>(NOTIFICATIONS_SOUND_KEY).then((enabled) => {
@@ -60,7 +55,6 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
       if (changes[SLOTS_STORAGE_KEY]) {
         const newMap = (changes[SLOTS_STORAGE_KEY].newValue as SlotsDataMap) || {};
         setSlotsMap(newMap);
-        void updateBadgeForMap(newMap);
       }
       if (changes[TRACKING_STATE_KEY]) {
         setTrackingState((changes[TRACKING_STATE_KEY].newValue as TrackingState) || initialTrackingState);
@@ -94,13 +88,13 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     const { [cityName]: _, ...updatedMap } = slotsMap;
     setSlotsMap(updatedMap);
     await setItem(SLOTS_STORAGE_KEY, updatedMap);
-    await updateBadgeForMap(updatedMap);
   };
 
   const clearAllSlots = async (): Promise<void> => {
     setSlotsMap({});
     await removeItem(SLOTS_STORAGE_KEY);
-    await clearSlotsBadge();
+    void stopBadgeBlinking();
+    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => {});
   };
 
   const totalSlots = calculateTotalSlots(slotsMap);

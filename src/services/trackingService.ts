@@ -1,6 +1,6 @@
 import { getItem, setItem } from './storageService';
 import { TRACKING_STATE_KEY, TRACKING_ALARM_NAME, SLOTS_STORAGE_KEY, NOTIFICATIONS_SOUND_KEY } from '../constants/storage.constants';
-import { setSlotsBadge } from './badgeService';
+import { startBadgeBlinking } from './badgeService';
 import { playNotificationSoundInTab } from './soundService';
 import type { TrackingState } from '../types/tracking.types';
 import type { PollingInterval } from '../components/IntervalSelector/IntervalSelector.types';
@@ -68,11 +68,7 @@ export const handleFoundSlots = async (cityName: string, tabId: number, slots: S
 
   await setItem(SLOTS_STORAGE_KEY, updatedSlotsMap);
 
-  const totalSlots = Object.values(updatedSlotsMap).reduce(
-    (sum, item) => sum + item.slots.length,
-    0
-  );
-  await setSlotsBadge(totalSlots);
+  await startBadgeBlinking();
 
   const soundEnabled = await getItem<boolean>(NOTIFICATIONS_SOUND_KEY);
   if (soundEnabled !== false) {
