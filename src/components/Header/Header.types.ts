@@ -4,4 +4,6 @@ export interface HeaderProps {
   onReset?: () => void;
   onOpenStats?: () => void;
   hasSlots?: boolean;
+  isSoundEnabled?: boolean;
+  onToggleSound?: () => void;
 }

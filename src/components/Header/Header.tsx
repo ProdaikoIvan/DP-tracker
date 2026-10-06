@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, RotateCcw, CalendarDays, Bell, Settings } from 'lucide-react';
+import { ArrowLeft, RotateCcw, CalendarDays, Bell, BellOff, Settings } from 'lucide-react';
 import type { HeaderProps } from './Header.types';
 import styles from './Header.module.css';
 
@@ -9,6 +9,8 @@ const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenStats,
   hasSlots,
+  isSoundEnabled,
+  onToggleSound,
 }) => {
   return (
     <header className={styles.header}>
@@ -54,11 +56,12 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           type="button"
-          className={styles.iconButton}
-          aria-label="Сповіщення"
-          title="Сповіщення"
+          className={`${styles.iconButton} ${isSoundEnabled ? styles.active : ''}`}
+          onClick={onToggleSound}
+          aria-label={isSoundEnabled ? 'Вимкнути звук сповіщень' : 'Увімкнути звук сповіщень'}
+          title={isSoundEnabled ? 'Звукові сповіщення увімкнено' : 'Звукові сповіщення вимкнено'}
         >
-          <Bell size={18} />
+          {isSoundEnabled ? <Bell size={18} /> : <BellOff size={18} />}
         </button>
         <button
           type="button"

@@ -13,7 +13,7 @@ const MainPage: React.FC<MainPageProps> = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const { slotsMap, totalSlots, clearAllSlots } = useSlots();
+  const { slotsMap, totalSlots, clearAllSlots, isSoundEnabled, toggleSound } = useSlots();
 
   const handleSelectDepartment = (dept: SelectedDepartment) => {
     setSelectedDepartment(dept);
@@ -61,6 +61,8 @@ const MainPage: React.FC<MainPageProps> = () => {
         onReset={handleResetClick}
         onOpenStats={() => setIsStatsModalOpen(true)}
         hasSlots={totalSlots > 0}
+        isSoundEnabled={isSoundEnabled}
+        onToggleSound={toggleSound}
       />
       <main className="main-content">
         {selectedDepartment ? (
