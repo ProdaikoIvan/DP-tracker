@@ -1,0 +1,60 @@
+.container {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.clockIcon {
+  color: var(--primary-green);
+}
+
+.title {
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.button {
+  all: unset;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.button:hover {
+  background-color: var(--primary-green-translucent);
+  color: var(--primary-green);
+  border-color: var(--primary-green-border);
+  box-shadow: 0 0 10px var(--primary-green-translucent);
+}
+
+.buttonActive {
+  background-color: var(--btn-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
+}

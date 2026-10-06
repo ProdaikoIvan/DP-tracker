@@ -127,22 +127,10 @@
   border-radius: 50%;
 }
 
-.statusDotActive {
-  background-color: var(--status-active);
-  box-shadow: var(--shadow-glow);
-}
-
-.statusDotPaused {
-  background-color: var(--status-paused);
-}
-
-.statusTextActive {
-  color: var(--status-active);
-}
-
-.statusTextPaused {
-  color: var(--status-paused);
-}
+.statusDotActive { background-color: var(--status-active); box-shadow: var(--shadow-glow); }
+.statusDotPaused { background-color: var(--status-paused); }
+.statusTextActive { color: var(--status-active); }
+.statusTextPaused { color: var(--status-paused); }
 
 .externalLink {
   all: unset;
@@ -155,7 +143,6 @@
   cursor: pointer;
   transition: var(--transition-default);
 }
-
 .externalLink:hover {
   color: var(--primary-green);
 }

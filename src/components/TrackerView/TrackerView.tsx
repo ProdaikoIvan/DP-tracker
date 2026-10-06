@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { MapPin, Play, Pause, ExternalLink } from 'lucide-react';
-import type { TrackerViewProps } from './TrackerView.types';
+import IntervalSelector from '../IntervalSelector/IntervalSelector';
+import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
 import styles from './TrackerView.module.css';
 
 const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
   const [isTracking, setIsTracking] = useState(false);
+  const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
 
   const toggleTracking = () => {
     setIsTracking((prev) => !prev);
@@ -38,11 +40,16 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
         </button>
       </div>
 
+      <IntervalSelector
+        value={selectedInterval}
+        onChange={setSelectedInterval}
+      />
+
       <div className={styles.statusBar}>
         <div className={styles.statusIndicator}>
           <div className={isTracking ? styles.statusDotActive : styles.statusDotPaused} />
           <span className={isTracking ? styles.statusTextActive : styles.statusTextPaused}>
-            {isTracking ? 'Моніторинг активний' : 'На паузі'}
+            {isTracking ? `Моніторинг активний (${selectedInterval} хв)` : 'На паузі'}
           </span>
         </div>
 
