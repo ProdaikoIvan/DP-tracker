@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MapPin, Play, Pause, ExternalLink } from 'lucide-react';
+import { MapPin, Play, Pause } from 'lucide-react';
 import IntervalSelector from '../IntervalSelector/IntervalSelector';
+import CountdownTimer from '../CountdownTimer/CountdownTimer';
 import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
 import styles from './TrackerView.module.css';
 
@@ -53,15 +54,10 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
           </span>
         </div>
 
-        <a
-          href={city.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.externalLink}
-        >
-          <span>Сайт запису</span>
-          <ExternalLink size={14} />
-        </a>
+        <CountdownTimer
+          isActive={isTracking}
+          intervalMinutes={selectedInterval}
+        />
       </div>
     </div>
   );

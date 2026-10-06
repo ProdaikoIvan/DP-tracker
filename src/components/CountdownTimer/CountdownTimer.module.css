@@ -1,0 +1,27 @@
+.timerContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  transition: var(--transition-default);
+}
+
+.timerActive {
+  color: var(--primary-green);
+}
+
+.timerIcon {
+  color: var(--text-secondary);
+  transition: var(--transition-default);
+}
+
+.timerIconActive {
+  color: var(--primary-green);
+}
+
+.timeText {
+  letter-spacing: 0.5px;
+}

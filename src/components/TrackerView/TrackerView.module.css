@@ -131,18 +131,3 @@
 .statusDotPaused { background-color: var(--status-paused); }
 .statusTextActive { color: var(--status-active); }
 .statusTextPaused { color: var(--status-paused); }
-
-.externalLink {
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition-default);
-}
-.externalLink:hover {
-  color: var(--primary-green);
-}
