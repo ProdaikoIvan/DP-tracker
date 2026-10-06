@@ -20,12 +20,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ isActive, intervalMinut
     if (!isActive) return;
 
     const timerId = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          return intervalMinutes * 60;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => (prev <= 1 ? intervalMinutes * 60 : prev - 1));
     }, 1000);
 
     return () => clearInterval(timerId);
