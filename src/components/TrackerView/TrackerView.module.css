@@ -120,14 +120,29 @@
   font-weight: 600;
 }
 
-.statusDotActive,
-.statusDotPaused {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
+.statusDotActive, .statusDotPaused { width: 8px; height: 8px; border-radius: 50%; }
 .statusDotActive { background-color: var(--status-active); box-shadow: var(--shadow-glow); }
 .statusDotPaused { background-color: var(--status-paused); }
 .statusTextActive { color: var(--status-active); }
 .statusTextPaused { color: var(--status-paused); }
+
+.viewSlotsButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--primary-green-translucent);
+  border: 1px solid var(--primary-green-border);
+  color: var(--primary-green);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.viewSlotsButton:hover {
+  background-color: var(--primary-green);
+  color: var(--bg-dark);
+}

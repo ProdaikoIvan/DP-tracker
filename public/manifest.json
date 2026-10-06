@@ -5,7 +5,8 @@
   "description": "DP Slot Tracker Extension",
   "permissions": [
     "tabs",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "host_permissions": [
     "*://*.pasport.org.ua/*"

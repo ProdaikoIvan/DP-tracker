@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { MapPin, Play, Pause } from 'lucide-react';
+import { MapPin, Play, Pause, Eye } from 'lucide-react';
 import IntervalSelector from '../IntervalSelector/IntervalSelector';
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
+import SlotsModal from '../SlotsModal/SlotsModal';
 import { getActiveTab } from '../../services/tabService';
 import { checkAvailableSlots } from '../../services/slotService';
-import type { SlotDay } from '../../services/slotService.types';
+import { useSlots } from '../../context/SlotsContext';
 import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
 import styles from './TrackerView.module.css';
 
 const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
   const [isTracking, setIsTracking] = useState(false);
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
-  const [foundSlots, setFoundSlots] = useState<SlotDay[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { foundSlots, foundAt, saveSlots, clearSlots } = useSlots();
 
   const checkSlots = async () => {
     const tab = await getActiveTab();
@@ -19,8 +21,10 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
 
     const slots = await checkAvailableSlots(tab.id);
     if (slots.length > 0) {
-      setFoundSlots(slots);
+      const now = new Date();
+      const timestamp = `${now.toLocaleDateString('uk-UA')} о ${now.toLocaleTimeString('uk-UA')}`;
       setIsTracking(false);
+      void saveSlots(slots, timestamp);
     }
   };
 
@@ -29,7 +33,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
     setIsTracking(nextState);
 
     if (nextState) {
-      setFoundSlots([]);
+      void clearSlots();
       void checkSlots();
     }
   };
@@ -79,6 +83,17 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
                 ? `Моніторинг активний (${selectedInterval} хв)`
                 : 'На паузі'}
           </span>
+          {hasSlots && (
+            <button
+              type="button"
+              className={styles.viewSlotsButton}
+              onClick={() => setIsModalOpen(true)}
+              title="Переглянути вільні дати"
+            >
+              <Eye size={13} />
+              <span>Переглянути</span>
+            </button>
+          )}
         </div>
 
         <CountdownTimer
@@ -86,6 +101,13 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
           intervalMinutes={selectedInterval}
         />
       </div>
+
+      <SlotsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        slots={foundSlots}
+        foundAt={foundAt}
+      />
     </div>
   );
 };

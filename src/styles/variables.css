@@ -46,4 +46,9 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 20px rgba(0, 240, 144, 0.25);
+
+  /* Scrollbars */
+  --scrollbar-track: var(--bg-dark);
+  --scrollbar-thumb: var(--btn-hover);
+  --scrollbar-thumb-hover: #4b5563;
 }

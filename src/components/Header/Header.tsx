@@ -3,7 +3,7 @@ import { ArrowLeft, RotateCw, Bell, Settings } from 'lucide-react';
 import type { HeaderProps } from './Header.types';
 import styles from './Header.module.css';
 
-const Header: React.FC<HeaderProps> = ({ onBack, showBackButton }) => {
+const Header: React.FC<HeaderProps> = ({ onBack, showBackButton, onRefresh }) => {
   return (
     <header className={styles.header}>
       <div className={styles.leftSection}>
@@ -25,7 +25,13 @@ const Header: React.FC<HeaderProps> = ({ onBack, showBackButton }) => {
             <ArrowLeft size={18} />
           </button>
         )}
-        <button className={styles.iconButton} aria-label="Оновити" title="Оновити">
+        <button
+          type="button"
+          className={styles.iconButton}
+          onClick={onRefresh}
+          aria-label="Оновити"
+          title="Оновити"
+        >
           <RotateCw size={18} />
         </button>
         <button
