@@ -36,7 +36,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country }) => {
           aria-label={isTracking ? 'Призупинити відстеження' : 'Запустити відстеження'}
           title={isTracking ? 'Пауза' : 'Старт'}
         >
-          {isTracking ? <Pause size={24} /> : <Play size={24} style={{ marginLeft: 3 }} />}
+          {isTracking ? <Pause size={24} /> : <Play size={24} />}
         </button>
       </div>
 
