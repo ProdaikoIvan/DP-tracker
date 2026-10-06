@@ -22,17 +22,21 @@ const Header: React.FC<HeaderProps> = ({ onBack, showBackButton }) => {
             aria-label="До списку відділень"
             title="До списку відділень"
           >
-            <ArrowLeft size={18} color="#9ca3af" />
+            <ArrowLeft size={18} />
           </button>
         )}
-        <button className={styles.iconButton} aria-label="Reset">
-          <RotateCw size={18} color="#9ca3af" />
+        <button className={styles.iconButton} aria-label="Оновити" title="Оновити">
+          <RotateCw size={18} />
         </button>
-        <button className={`${styles.iconButton} ${styles.activeNotification}`} aria-label="Notifications">
-          <Bell size={18} color="#00d06c" />
+        <button
+          className={`${styles.iconButton} ${styles.activeNotification}`}
+          aria-label="Сповіщення"
+          title="Сповіщення"
+        >
+          <Bell size={18} />
         </button>
-        <button className={styles.iconButton} aria-label="Settings">
-          <Settings size={18} color="#9ca3af" />
+        <button className={styles.iconButton} aria-label="Налаштування" title="Налаштування">
+          <Settings size={18} />
         </button>
       </div>
     </header>

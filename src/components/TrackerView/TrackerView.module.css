@@ -7,7 +7,7 @@
 
 .serviceCard {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color-light);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -17,24 +17,33 @@
   box-shadow: var(--shadow-md);
   transition: var(--transition-default);
 }
+
 .serviceCardActive {
   border-color: var(--primary-green-border);
   box-shadow: var(--shadow-glow);
 }
+
 .serviceInfo {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
+
 .countryBadge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
+  background-color: var(--badge-bg);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  width: fit-content;
 }
+
 .serviceTitle {
   font-size: 20px;
   font-weight: 700;
@@ -42,6 +51,7 @@
   margin: 0;
   line-height: 1.2;
 }
+
 .addressRow {
   display: flex;
   align-items: flex-start;
@@ -50,41 +60,48 @@
   font-size: 12px;
   line-height: 1.4;
 }
+
 .pinIcon {
   color: var(--primary-green);
   flex-shrink: 0;
   margin-top: 2px;
 }
+
 .playPauseButton {
   all: unset;
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   background-color: var(--btn-bg);
-  border: 2px solid var(--border-color-light);
+  border: 1px solid var(--border-color);
   color: var(--text-primary);
   transition: var(--transition-fast);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
+
 .playPauseButton:hover {
   transform: scale(1.06);
   background-color: var(--btn-hover);
+  border-color: var(--border-color-light);
 }
+
 .playPauseButtonActive {
   background-color: var(--primary-green);
   border-color: var(--primary-green);
   color: var(--bg-dark);
   box-shadow: var(--shadow-glow);
 }
+
 .playPauseButtonActive:hover {
   background-color: var(--primary-green-hover);
   border-color: var(--primary-green-hover);
 }
+
 .statusBar {
   display: flex;
   align-items: center;
@@ -92,27 +109,41 @@
   padding: 12px 16px;
   border-radius: 10px;
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color-light);
+  border: 1px solid var(--border-color);
   font-size: 12px;
 }
+
 .statusIndicator {
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 600;
 }
-.statusDotActive, .statusDotPaused {
+
+.statusDotActive,
+.statusDotPaused {
   width: 8px;
   height: 8px;
   border-radius: 50%;
 }
+
 .statusDotActive {
   background-color: var(--status-active);
   box-shadow: var(--shadow-glow);
 }
-.statusDotPaused { background-color: var(--status-paused); }
-.statusTextActive { color: var(--status-active); }
-.statusTextPaused { color: var(--status-paused); }
+
+.statusDotPaused {
+  background-color: var(--status-paused);
+}
+
+.statusTextActive {
+  color: var(--status-active);
+}
+
+.statusTextPaused {
+  color: var(--status-paused);
+}
+
 .externalLink {
   all: unset;
   display: inline-flex;
@@ -124,4 +155,7 @@
   cursor: pointer;
   transition: var(--transition-default);
 }
-.externalLink:hover { color: var(--primary-green); }
+
+.externalLink:hover {
+  color: var(--primary-green);
+}

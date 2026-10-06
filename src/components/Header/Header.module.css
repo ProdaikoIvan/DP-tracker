@@ -21,19 +21,24 @@
 }
 
 .title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
+  letter-spacing: -0.01em;
 }
 
 .version {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background-color: var(--badge-bg);
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
 .rightSection {
@@ -43,27 +48,34 @@
 }
 
 .iconButton {
+  all: unset;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   background-color: var(--btn-bg);
-  border: none;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
-  transition: var(--transition-default);
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
 }
 
 .iconButton:hover {
   background-color: var(--btn-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
 }
 
 .activeNotification {
   background-color: var(--primary-green-translucent);
   border: 1px solid var(--primary-green-border);
+  color: var(--primary-green);
 }
 
 .activeNotification:hover {
   background-color: var(--primary-green-border);
+  color: var(--primary-green);
+  box-shadow: var(--shadow-glow);
 }
