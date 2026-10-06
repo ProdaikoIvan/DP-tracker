@@ -14,13 +14,10 @@
 }
 
 .logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 32px;
   height: 32px;
-  background-color: var(--primary-green);
   border-radius: 50%;
+  object-fit: contain;
 }
 
 .title {

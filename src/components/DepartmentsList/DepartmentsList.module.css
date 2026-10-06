@@ -2,72 +2,142 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-.countrySection {
+.introBlock {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
+}
+.introTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.introDescription {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
 }
 
-.countryTitle {
+/* Accordion */
+.accordionRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.accordionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.accordionHeader {
+  margin: 0;
+  display: flex;
+}
+.accordionTrigger {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: var(--transition-default);
+}
+.accordionTrigger:hover {
+  border-bottom-color: var(--primary-green);
+}
+.triggerContent {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-color);
 }
-
 .flag {
   font-size: 18px;
 }
+.chevron {
+  color: var(--text-secondary);
+  transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+.accordionTrigger[data-state="open"] .chevron {
+  transform: rotate(180deg);
+}
+.accordionContent {
+  overflow: hidden;
+}
+.accordionContent[data-state="open"] {
+  animation: slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+.accordionContent[data-state="closed"] {
+  animation: slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
 
+@keyframes slideDown {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes slideUp {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+/* Cities Grid Styles */
 .citiesGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
+  padding: 6px 4px;
 }
 
 .cityCard {
+  all: unset;
+  box-sizing: border-box;
   background-color: var(--bg-card);
   border: 1px solid var(--border-color-light);
   border-radius: 8px;
   padding: 12px;
   transition: var(--transition-default);
   cursor: pointer;
+  display: block;
+  text-align: left;
+  width: 100%;
 }
-
 .cityCard:hover {
   background-color: var(--bg-card-hover);
   border-color: var(--primary-green);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-
 .cityHeader {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
 }
-
 .pinIcon {
   color: var(--primary-green);
   flex-shrink: 0;
 }
-
 .cityName {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   margin: 0;
 }
-
 .address {
   font-size: 12px;
   color: var(--text-secondary);

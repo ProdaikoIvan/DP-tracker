@@ -1,20 +1,30 @@
 import React from 'react';
-import { RotateCw, Bell, Settings, FileText } from 'lucide-react';
+import { ArrowLeft, RotateCw, Bell, Settings } from 'lucide-react';
+import type { HeaderProps } from './Header.types';
 import styles from './Header.module.css';
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ onBack, showBackButton }) => {
   return (
     <header className={styles.header}>
       <div className={styles.leftSection}>
-        <div className={styles.logo}>
-          <FileText size={18} strokeWidth={2.5} color="#111827" />
-        </div>
+        <img src="/icon48.png" alt="Logo" className={styles.logo} />
         <h1 className={styles.title}>
-          DP Slot Tracker <span className={styles.version}>v1.0.0</span>
+          DP Tracker <span className={styles.version}>v1.0.0</span>
         </h1>
       </div>
 
       <div className={styles.rightSection}>
+        {showBackButton && (
+          <button
+            type="button"
+            className={styles.iconButton}
+            onClick={onBack}
+            aria-label="До списку відділень"
+            title="До списку відділень"
+          >
+            <ArrowLeft size={18} color="#9ca3af" />
+          </button>
+        )}
         <button className={styles.iconButton} aria-label="Reset">
           <RotateCw size={18} color="#9ca3af" />
         </button>
