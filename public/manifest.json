@@ -6,11 +6,16 @@
   "permissions": [
     "tabs",
     "scripting",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "host_permissions": [
     "*://*.pasport.org.ua/*"
   ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "action": {
     "default_popup": "index.html",
     "default_icon": {

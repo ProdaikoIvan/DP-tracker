@@ -1,9 +1,19 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getItem, setItem, removeItem } from '../services/storageService';
 import { setSlotsBadge, clearSlotsBadge } from '../services/badgeService';
-import { playNotificationSound } from '../services/soundService';
-import { SLOTS_STORAGE_KEY, NOTIFICATIONS_SOUND_KEY } from '../constants/storage.constants';
-import type { SlotDay } from '../services/slotService.types';
+import {
+  initialTrackingState,
+  getStoredTrackingState,
+  startTrackingSession,
+  stopTrackingSession,
+} from '../services/trackingService';
+import {
+  SLOTS_STORAGE_KEY,
+  NOTIFICATIONS_SOUND_KEY,
+  TRACKING_STATE_KEY,
+} from '../constants/storage.constants';
+import type { TrackingState } from '../types/tracking.types';
+import type { PollingInterval } from '../components/IntervalSelector/IntervalSelector.types';
 import type {
   ServiceSlotsData,
   SlotsDataMap,
@@ -28,6 +38,7 @@ const updateBadgeForMap = async (map: SlotsDataMap): Promise<void> => {
 export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [slotsMap, setSlotsMap] = useState<SlotsDataMap>({});
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+  const [trackingState, setTrackingState] = useState<TrackingState>(initialTrackingState);
 
   useEffect(() => {
     void getItem<SlotsDataMap>(SLOTS_STORAGE_KEY).then((data) => {
@@ -36,12 +47,28 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
         void updateBadgeForMap(data);
       }
     });
-
     void getItem<boolean>(NOTIFICATIONS_SOUND_KEY).then((enabled) => {
-      if (enabled !== null) {
-        setIsSoundEnabled(enabled);
-      }
+      if (enabled !== null) setIsSoundEnabled(enabled);
     });
+    void getStoredTrackingState().then(setTrackingState);
+
+    const handleStorageChange = (
+      changes: { [key: string]: chrome.storage.StorageChange },
+      areaName: string
+    ) => {
+      if (areaName !== 'local') return;
+      if (changes[SLOTS_STORAGE_KEY]) {
+        const newMap = (changes[SLOTS_STORAGE_KEY].newValue as SlotsDataMap) || {};
+        setSlotsMap(newMap);
+        void updateBadgeForMap(newMap);
+      }
+      if (changes[TRACKING_STATE_KEY]) {
+        setTrackingState((changes[TRACKING_STATE_KEY].newValue as TrackingState) || initialTrackingState);
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => chrome.storage.onChanged.removeListener(handleStorageChange);
   }, []);
 
   const toggleSound = async (): Promise<void> => {
@@ -50,27 +77,17 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     await setItem(NOTIFICATIONS_SOUND_KEY, nextState);
   };
 
-  const getServiceSlots = (cityName: string): ServiceSlotsData | undefined => {
-    return slotsMap[cityName];
+  const startTracking = async (cityName: string, tabId: number, interval: PollingInterval): Promise<void> => {
+    const newState = await startTrackingSession(cityName, tabId, interval);
+    setTrackingState(newState);
   };
 
-  const saveSlotsForService = async (
-    cityName: string,
-    slots: SlotDay[],
-    timestamp: string
-  ): Promise<void> => {
-    const updatedMap: SlotsDataMap = {
-      ...slotsMap,
-      [cityName]: { cityName, slots, foundAt: timestamp },
-    };
-    setSlotsMap(updatedMap);
-    await setItem(SLOTS_STORAGE_KEY, updatedMap);
-    await updateBadgeForMap(updatedMap);
-
-    if (isSoundEnabled && slots.length > 0) {
-      playNotificationSound();
-    }
+  const stopTracking = async (): Promise<void> => {
+    const newState = await stopTrackingSession(trackingState);
+    setTrackingState(newState);
   };
+
+  const getServiceSlots = (cityName: string): ServiceSlotsData | undefined => slotsMap[cityName];
 
   const clearSlotsForService = async (cityName: string): Promise<void> => {
     if (!slotsMap[cityName]) return;
@@ -94,9 +111,11 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
         slotsMap,
         totalSlots,
         isSoundEnabled,
+        trackingState,
         toggleSound,
+        startTracking,
+        stopTracking,
         getServiceSlots,
-        saveSlotsForService,
         clearSlotsForService,
         clearAllSlots,
       }}
@@ -108,8 +127,6 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
 
 export const useSlots = (): SlotsContextValue => {
   const context = useContext(SlotsContext);
-  if (!context) {
-    throw new Error('useSlots must be used within a SlotsProvider');
-  }
+  if (!context) throw new Error('useSlots must be used within a SlotsProvider');
   return context;
 };

@@ -34,3 +34,14 @@ export const playNotificationSound = (): void => {
     // Audio playback error fallback
   }
 };
+
+export const playNotificationSoundInTab = async (tabId: number): Promise<void> => {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: playNotificationSound,
+    });
+  } catch {
+    // Ignore script injection errors
+  }
+};

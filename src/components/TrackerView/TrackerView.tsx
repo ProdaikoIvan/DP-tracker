@@ -5,40 +5,43 @@ import CountdownTimer from '../CountdownTimer/CountdownTimer';
 import { SlotsModal, SlotDetails } from '../SlotsModal';
 import { getActiveTab } from '../../services/tabService';
 import { checkAvailableSlots } from '../../services/slotService';
+import { handleFoundSlots } from '../../services/trackingService';
 import { useSlots } from '../../context/SlotsContext';
 import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
 import styles from './TrackerView.module.css';
 
 const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
-  const [isTracking, setIsTracking] = useState(false);
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { getServiceSlots, saveSlotsForService, clearSlotsForService } = useSlots();
+  const {
+    trackingState,
+    startTracking,
+    stopTracking,
+    getServiceSlots,
+    clearSlotsForService,
+  } = useSlots();
+
+  const isTracking = trackingState.isTracking && trackingState.cityName === city.name;
+  const activeInterval = isTracking ? trackingState.intervalMinutes : selectedInterval;
 
   const serviceSlots = getServiceSlots(city.name);
   const foundSlots = serviceSlots?.slots ?? [];
   const foundAt = serviceSlots?.foundAt ?? '';
 
-  const checkSlots = async () => {
-    const tab = await getActiveTab();
-    if (!tab?.id) return;
+  const toggleTracking = async () => {
+    if (isTracking) {
+      await stopTracking();
+    } else {
+      const tab = await getActiveTab();
+      if (!tab?.id) return;
 
-    const slots = await checkAvailableSlots(tab.id);
-    if (slots.length > 0) {
-      const now = new Date();
-      const timestamp = `${now.toLocaleDateString('uk-UA')} о ${now.toLocaleTimeString('uk-UA')}`;
-      setIsTracking(false);
-      void saveSlotsForService(city.name, slots, timestamp);
-    }
-  };
+      await clearSlotsForService(city.name);
+      await startTracking(city.name, tab.id, selectedInterval);
 
-  const toggleTracking = () => {
-    const nextState = !isTracking;
-    setIsTracking(nextState);
-
-    if (nextState) {
-      void clearSlotsForService(city.name);
-      void checkSlots();
+      const slots = await checkAvailableSlots(tab.id);
+      if (slots.length > 0) {
+        await handleFoundSlots(city.name, tab.id, slots);
+      }
     }
   };
 
@@ -57,7 +60,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
 
         <button
           type="button"
-          onClick={toggleTracking}
+          onClick={() => void toggleTracking()}
           className={`${styles.playPauseButton} ${isTracking ? styles.playPauseButtonActive : ''}`}
           aria-label={isTracking ? 'Призупинити відстеження' : 'Запустити відстеження'}
           title={isTracking ? 'Пауза' : 'Старт'}
@@ -67,8 +70,13 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
       </div>
 
       <IntervalSelector
-        value={selectedInterval}
-        onChange={setSelectedInterval}
+        value={activeInterval}
+        onChange={(val) => {
+          setSelectedInterval(val);
+          if (isTracking && trackingState.tabId) {
+            void startTracking(city.name, trackingState.tabId, val);
+          }
+        }}
       />
 
       <div className={styles.statusBar}>
@@ -78,7 +86,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
             {hasSlots
               ? 'Знайдено вільні дати!'
               : isTracking
-                ? `Моніторинг активний (${selectedInterval} хв)`
+                ? `Моніторинг активний (${activeInterval} хв)`
                 : 'На паузі'}
           </span>
           {hasSlots && (
@@ -96,7 +104,8 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
 
         <CountdownTimer
           isActive={isTracking}
-          intervalMinutes={selectedInterval}
+          intervalMinutes={activeInterval}
+          targetTimestamp={isTracking ? trackingState.nextCheckTimestamp : null}
         />
       </div>
 

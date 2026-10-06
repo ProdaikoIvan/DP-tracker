@@ -13,7 +13,7 @@ const MainPage: React.FC<MainPageProps> = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const { slotsMap, totalSlots, clearAllSlots, isSoundEnabled, toggleSound } = useSlots();
+  const { slotsMap, totalSlots, clearAllSlots, isSoundEnabled, toggleSound, stopTracking } = useSlots();
 
   const handleSelectDepartment = (dept: SelectedDepartment) => {
     setSelectedDepartment(dept);
@@ -21,17 +21,14 @@ const MainPage: React.FC<MainPageProps> = () => {
   };
 
   const handleReset = async () => {
+    await stopTracking();
     await clearAllSlots();
     const dept = await detectCurrentDepartment();
     setSelectedDepartment(dept);
   };
 
   const handleResetClick = () => {
-    if (totalSlots > 0) {
-      setIsResetConfirmOpen(true);
-    } else {
-      void handleReset();
-    }
+    setIsResetConfirmOpen(true);
   };
 
   const handleConfirmReset = async () => {
