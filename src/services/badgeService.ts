@@ -24,3 +24,8 @@ export const stopBadgeBlinking = async (): Promise<void> => {
   }
   await chrome.action.setBadgeText({ text: '' });
 };
+
+export const stopAllBadgeBlinking = async (): Promise<void> => {
+  await stopBadgeBlinking();
+  chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => { });
+};

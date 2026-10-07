@@ -18,11 +18,9 @@
   --primary-green-hover: #00d982;
   --primary-green-translucent: rgba(0, 240, 144, 0.1);
   --primary-green-border: rgba(0, 240, 144, 0.25);
-  --primary-green-glow: rgba(0, 240, 144, 0.35);
 
   /* Status Colors */
   --status-active: #00f090;
-  --status-active-bg: rgba(0, 240, 144, 0.12);
   --status-paused: #fbbf24;
   --status-paused-bg: rgba(251, 191, 36, 0.12);
 
@@ -30,12 +28,10 @@
   --btn-bg: #141e30;
   --btn-hover: #1c2a44;
   --badge-bg: rgba(255, 255, 255, 0.06);
-  --badge-text: #94a3b8;
 
   /* Borders */
   --border-color: rgba(255, 255, 255, 0.07);
   --border-color-light: rgba(255, 255, 255, 0.12);
-  --border-color-focus: rgba(0, 240, 144, 0.5);
 
   /* Transitions */
   --transition-default: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);

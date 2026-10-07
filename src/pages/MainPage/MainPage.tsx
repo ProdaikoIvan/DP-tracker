@@ -5,9 +5,8 @@ import TrackerView from '../../components/TrackerView/TrackerView';
 import { SlotsModal, AllSlotsList } from '../../components/SlotsModal';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { useSlots } from '../../context/SlotsContext';
-import type { MainPageProps } from './MainPage.types';
 
-const MainPage: React.FC<MainPageProps> = () => {
+const MainPage: React.FC = () => {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const {

@@ -7,7 +7,8 @@ import { getActiveTab } from '../../services/tabService';
 import { checkAvailableSlots } from '../../services/slotService';
 import { handleFoundSlots } from '../../services/trackingService';
 import { useSlots } from '../../context/SlotsContext';
-import type { TrackerViewProps, PollingInterval } from './TrackerView.types';
+import type { TrackerViewProps } from './TrackerView.types';
+import type { PollingInterval } from '../IntervalSelector/IntervalSelector.types';
 import styles from './TrackerView.module.css';
 
 const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {

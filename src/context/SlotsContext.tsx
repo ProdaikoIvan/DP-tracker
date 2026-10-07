@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getItem, setItem, removeItem } from '../services/storageService';
-import { stopBadgeBlinking } from '../services/badgeService';
+import { stopAllBadgeBlinking } from '../services/badgeService';
 import {
   initialTrackingState,
   getStoredTrackingState,
@@ -28,8 +28,6 @@ const SlotsContext = createContext<SlotsContextValue | null>(null);
 export const calculateTotalSlots = (map: SlotsDataMap): number =>
   Object.values(map).reduce((sum, item) => sum + item.slots.length, 0);
 
-
-
 export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [slotsMap, setSlotsMap] = useState<SlotsDataMap>({});
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
@@ -37,8 +35,7 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
 
   useEffect(() => {
-    void stopBadgeBlinking();
-    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => { });
+    void stopAllBadgeBlinking();
 
     void getItem<SlotsDataMap>(SLOTS_STORAGE_KEY).then((data) => {
       if (data) {
@@ -106,8 +103,7 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const clearAllSlots = async (): Promise<void> => {
     setSlotsMap({});
     await removeItem(SLOTS_STORAGE_KEY);
-    void stopBadgeBlinking();
-    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => { });
+    void stopAllBadgeBlinking();
   };
 
   const totalSlots = calculateTotalSlots(slotsMap);

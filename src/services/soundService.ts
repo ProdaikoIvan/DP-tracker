@@ -1,9 +1,6 @@
 export const playNotificationSound = (): void => {
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioCtx) return;
-
-    const ctx = new AudioCtx();
+    const ctx = new AudioContext();
     const notes = [523.25, 659.25, 783.99, 1046.5];
 
     notes.forEach((freq, index) => {

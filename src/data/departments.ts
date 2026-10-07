@@ -1,5 +1,4 @@
 import type { Country } from '../types/departments.types';
-export type { City, Country } from '../types/departments.types';
 
 export const departments: Country[] = [
   {
