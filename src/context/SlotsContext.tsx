@@ -12,6 +12,8 @@ import {
   NOTIFICATIONS_SOUND_KEY,
   TRACKING_STATE_KEY,
 } from '../constants/storage.constants';
+import { openDepartmentTab, resolveInitialDepartment } from '../services/tabService';
+import type { SelectedDepartment } from '../types/departments.types';
 import type { TrackingState } from '../types/tracking.types';
 import type { PollingInterval } from '../components/IntervalSelector/IntervalSelector.types';
 import type {
@@ -32,10 +34,11 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [slotsMap, setSlotsMap] = useState<SlotsDataMap>({});
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [trackingState, setTrackingState] = useState<TrackingState>(initialTrackingState);
+  const [selectedDepartment, setSelectedDepartment] = useState<SelectedDepartment | null>(null);
 
   useEffect(() => {
     void stopBadgeBlinking();
-    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => {});
+    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => { });
 
     void getItem<SlotsDataMap>(SLOTS_STORAGE_KEY).then((data) => {
       if (data) {
@@ -45,7 +48,12 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     void getItem<boolean>(NOTIFICATIONS_SOUND_KEY).then((enabled) => {
       if (enabled !== null) setIsSoundEnabled(enabled);
     });
-    void getStoredTrackingState().then(setTrackingState);
+    void getStoredTrackingState().then((state) => {
+      setTrackingState(state);
+      void resolveInitialDepartment(state).then((dept) => {
+        if (dept) setSelectedDepartment(dept);
+      });
+    });
 
     const handleStorageChange = (
       changes: { [key: string]: chrome.storage.StorageChange },
@@ -81,6 +89,11 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     setTrackingState(newState);
   };
 
+  const selectDepartment = (dept: SelectedDepartment | null): void => {
+    setSelectedDepartment(dept);
+    if (dept) void openDepartmentTab(dept.city.url);
+  };
+
   const getServiceSlots = (cityName: string): ServiceSlotsData | undefined => slotsMap[cityName];
 
   const clearSlotsForService = async (cityName: string): Promise<void> => {
@@ -94,7 +107,7 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     setSlotsMap({});
     await removeItem(SLOTS_STORAGE_KEY);
     void stopBadgeBlinking();
-    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => {});
+    chrome.runtime.sendMessage({ type: 'STOP_BADGE_BLINK' }).catch(() => { });
   };
 
   const totalSlots = calculateTotalSlots(slotsMap);
@@ -106,6 +119,8 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
         totalSlots,
         isSoundEnabled,
         trackingState,
+        selectedDepartment,
+        selectDepartment,
         toggleSound,
         startTracking,
         stopTracking,

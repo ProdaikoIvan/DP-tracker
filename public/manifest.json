@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DP Slot Tracker",
+  "name": "DP Tracker",
   "version": "1.0.0",
-  "description": "DP Slot Tracker Extension",
+  "description": "Пошук вільних дат ДП Документ",
   "permissions": [
     "tabs",
     "scripting",
