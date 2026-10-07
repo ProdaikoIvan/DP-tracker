@@ -1,0 +1,69 @@
+.card {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 9px 10px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.card:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--primary-green-border);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+.flagSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.countryCode {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.countBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: var(--badge-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1px 6px;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.arrowIcon {
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.card:hover .arrowIcon {
+  color: var(--primary-green);
+  transform: translateX(2px);
+}
+

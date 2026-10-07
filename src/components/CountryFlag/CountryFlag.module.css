@@ -1,0 +1,17 @@
+.flagWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color-light);
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.flagSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}

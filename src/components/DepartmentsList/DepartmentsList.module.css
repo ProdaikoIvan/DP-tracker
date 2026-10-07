@@ -4,17 +4,20 @@
   flex-direction: column;
   gap: 14px;
 }
+
 .searchWrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
+
 .searchIcon {
   position: absolute;
   left: 12px;
   color: var(--text-secondary);
   pointer-events: none;
 }
+
 .searchInput {
   all: unset;
   box-sizing: border-box;
@@ -28,12 +31,21 @@
   color: var(--text-primary);
   transition: var(--transition-fast);
 }
-.searchInput::placeholder { color: var(--text-secondary); opacity: 0.75; }
-.searchInput:hover { border-color: var(--border-color-light); }
+
+.searchInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+.searchInput:hover {
+  border-color: var(--border-color-light);
+}
+
 .searchInput:focus {
   border-color: var(--primary-green);
   box-shadow: 0 0 0 3px var(--primary-green-translucent);
 }
+
 .clearSearchBtn {
   all: unset;
   position: absolute;
@@ -49,99 +61,21 @@
   cursor: pointer;
   transition: var(--transition-fast);
 }
-.clearSearchBtn:hover { color: var(--text-primary); background-color: var(--btn-hover); }
-.accordionRoot {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.accordionItem {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: var(--transition-fast);
-}
-.accordionItem:hover { border-color: var(--border-color-light); }
-.accordionTrigger {
-  all: unset;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
+
+.clearSearchBtn:hover {
   color: var(--text-primary);
-  transition: var(--transition-fast);
+  background-color: var(--btn-hover);
 }
-.accordionTrigger:hover { background-color: var(--bg-card-hover); }
-.triggerContent { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.triggerRight { display: flex; align-items: center; gap: 8px; }
-.countBadge {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
-  background-color: var(--badge-bg);
-  padding: 2px 7px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-}
-.chevron { color: var(--text-muted); transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-.accordionTrigger[data-state="open"] .chevron { transform: rotate(180deg); }
-.accordionContent {
-  overflow: hidden;
-  border-top: 1px solid var(--border-color);
-  background-color: var(--bg-dark);
-}
-.citiesGrid {
+
+.countriesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  padding: 10px;
 }
-.cityCard {
-  all: unset;
-  box-sizing: border-box;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  transition: var(--transition-fast);
-}
-.cityCard:hover {
-  background-color: var(--bg-card-hover);
-  border-color: var(--primary-green);
-  box-shadow: var(--shadow-sm);
-}
-.cardInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-  flex: 1;
-}
-.cityHeader { display: flex; align-items: center; gap: 6px; }
-.pinIcon { color: var(--primary-green); flex-shrink: 0; }
-.cityName { font-size: 13px; font-weight: 600; color: var(--text-primary); margin: 0; }
-.arrowIcon {
+
+.emptyState {
+  text-align: center;
+  padding: 28px 16px;
   color: var(--text-muted);
-  flex-shrink: 0;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: var(--transition-fast);
+  font-size: 13px;
 }
-.cityCard:hover .arrowIcon { opacity: 1; transform: translateX(0); color: var(--primary-green); }
-.address {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin: 0;
-  padding-left: 21px;
-  line-height: 1.35;
-}
-.emptyState { text-align: center; padding: 28px 16px; color: var(--text-muted); font-size: 13px; }

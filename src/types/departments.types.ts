@@ -6,7 +6,7 @@ export interface City {
 
 export interface Country {
   name: string;
-  flag: string;
+  code: string;
   cities: City[];
 }
 

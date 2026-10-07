@@ -3,7 +3,7 @@ import type { Country } from '../types/departments.types';
 export const departments: Country[] = [
   {
     name: 'Україна',
-    flag: '🇺🇦',
+    code: 'UA',
     cities: [
       { name: 'Київ (Шептицького)', address: 'вул. Митрополита А. Шептицького, 4 А', url: 'https://komod.pasport.org.ua/solutions/e-queue' },
       { name: 'Київ (Кільцева дорога)', address: 'вул. Кільцева дорога, 1', url: 'https://respublika.pasport.org.ua/solutions/e-queue' },
@@ -36,7 +36,7 @@ export const departments: Country[] = [
   },
   {
     name: 'Польща',
-    flag: '🇵🇱',
+    code: 'PL',
     cities: [
       { name: 'Краків', address: 'Pawia 5, 31-154 Kraków', url: 'https://krakow.pasport.org.ua/solutions/e-queue' },
       { name: 'Гданськ', address: 'Aleja Grunwaldzka, 415', url: 'https://gdansk.pasport.org.ua/solutions/e-queue' },
@@ -46,21 +46,21 @@ export const departments: Country[] = [
   },
   {
     name: 'Чехія',
-    flag: '🇨🇿',
+    code: 'CZ',
     cities: [
       { name: 'Прага', address: 'Michelská, 1552/58', url: 'https://prague.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Словаччина',
-    flag: '🇸🇰',
+    code: 'SK',
     cities: [
       { name: 'Братислава', address: 'Prievozská 5434/6A', url: 'https://bratislava.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Німеччина',
-    flag: '🇩🇪',
+    code: 'DE',
     cities: [
       { name: 'Берлін', address: 'Am Treptower Park 14', url: 'https://berlin.pasport.org.ua/solutions/e-queue' },
       { name: 'Кельн', address: 'Händelstraße 25-29', url: 'https://cologne.pasport.org.ua/solutions/e-queue' },
@@ -69,7 +69,7 @@ export const departments: Country[] = [
   },
   {
     name: 'Іспанія',
-    flag: '🇪🇸',
+    code: 'ES',
     cities: [
       { name: 'Мадрид', address: 'Madrid, Blvr. de José Prat, 35, Vicálvaro, 28032', url: 'https://madrid.pasport.org.ua/solutions/e-queue' },
       { name: 'Валенсія', address: 'Av. de Pius XII, 2, local 117, Campanar', url: 'https://valencia.pasport.org.ua/solutions/e-queue' },
@@ -78,49 +78,49 @@ export const departments: Country[] = [
   },
   {
     name: 'Італія',
-    flag: '🇮🇹',
+    code: 'IT',
     cities: [
       { name: 'Мілан', address: 'Via Eugenio Curiel, 25, Rozzano', url: 'https://milan.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Болгарія',
-    flag: '🇧🇬',
+    code: 'BG',
     cities: [
       { name: 'Варна', address: 'бул. Владислав Варненчик, 186', url: 'https://varna.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Молдова',
-    flag: '🇲🇩',
+    code: 'MD',
     cities: [
       { name: 'Кишинів', address: 'Bd.Stefan cel Mare si Sfant, 8', url: 'https://chisinau.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Канада',
-    flag: '🇨🇦',
+    code: 'CA',
     cities: [
       { name: 'Торонто', address: '99 Six Point Rd, Etobicoke, ON M8Z 2X3', url: 'https://toronto.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Сполучене Королівство Великої Британії та Північної Ірландії',
-    flag: '🇬🇧',
+    code: 'GB',
     cities: [
       { name: 'Лондон', address: 'Ground Floor, The Foundry, 8-15 Dereham Place, EC2A 3HJ', url: 'https://london.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Бельгія',
-    flag: '🇧🇪',
+    code: 'BE',
     cities: [
       { name: 'Кортрейк', address: 'Kloosterstraat 9 - 8510 Marke, Kortrijk, Belgium', url: 'https://kortrijk.pasport.org.ua/solutions/e-queue' },
     ],
   },
   {
     name: 'Словенія',
-    flag: '🇸🇮',
+    code: 'SI',
     cities: [
       { name: 'Любляна', address: 'Leskoškova cesta, 12', url: 'https://ljubljana.pasport.org.ua/solutions/e-queue' },
     ],
