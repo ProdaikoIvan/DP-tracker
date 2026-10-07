@@ -8,11 +8,12 @@ const Header: React.FC<HeaderProps> = ({
   showBackButton,
   onReset,
   onOpenStats,
-  hasSlots,
   slotsCount,
   isSoundEnabled,
   onToggleSound,
 }) => {
+  const hasSlots = slotsCount > 0;
+
   return (
     <header className={styles.header}>
       <div className={styles.leftSection}>
@@ -54,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({
           title="Статистика вільних дат"
         >
           <CalendarDays size={18} />
-          {hasSlots && (slotsCount ?? 0) > 0 && (
+          {hasSlots && (
             <span className={styles.badgeCount}>{slotsCount}</span>
           )}
         </button>

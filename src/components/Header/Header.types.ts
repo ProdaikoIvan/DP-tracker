@@ -1,10 +1,9 @@
 export interface HeaderProps {
-  onBack?: () => void;
-  showBackButton?: boolean;
-  onReset?: () => void;
-  onOpenStats?: () => void;
-  hasSlots?: boolean;
-  slotsCount?: number;
-  isSoundEnabled?: boolean;
-  onToggleSound?: () => void;
+  showBackButton: boolean;
+  onBack: () => void;
+  onReset: () => void;
+  onOpenStats: () => void;
+  slotsCount: number;
+  isSoundEnabled: boolean;
+  onToggleSound: () => void;
 }

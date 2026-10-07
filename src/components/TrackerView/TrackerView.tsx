@@ -26,8 +26,6 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
   const activeInterval = isTracking ? trackingState.intervalMinutes : selectedInterval;
 
   const serviceSlots = getServiceSlots(city.name);
-  const foundSlots = serviceSlots?.slots ?? [];
-  const foundAt = serviceSlots?.foundAt;
 
   const toggleTracking = async () => {
     if (isTracking) {
@@ -46,7 +44,8 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
     }
   };
 
-  const hasSlots = foundSlots.length > 0;
+  const hasSlots = Boolean(serviceSlots && serviceSlots.slots.length > 0);
+  const isStatusActive = hasSlots || isTracking;
 
   return (
     <div className={styles.container}>
@@ -82,8 +81,8 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
 
       <div className={styles.statusBar}>
         <div className={styles.statusIndicator}>
-          <div className={hasSlots || isTracking ? styles.statusDotActive : styles.statusDotPaused} />
-          <span className={hasSlots || isTracking ? styles.statusTextActive : styles.statusTextPaused}>
+          <div className={isStatusActive ? styles.statusDotActive : styles.statusDotPaused} />
+          <span className={isStatusActive ? styles.statusTextActive : styles.statusTextPaused}>
             {hasSlots
               ? 'Знайдено вільні дати!'
               : isTracking
@@ -104,6 +103,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
         </div>
 
         <CountdownTimer
+          key={isTracking ? (trackingState.nextCheckTimestamp ?? 'active') : activeInterval}
           isActive={isTracking}
           intervalMinutes={activeInterval}
           targetTimestamp={isTracking ? trackingState.nextCheckTimestamp : null}
@@ -113,13 +113,9 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
       <SlotsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`${city.name}: Вільні дати (${foundSlots.length})`}
+        title={`${city.name}: Вільні дати (${serviceSlots ? serviceSlots.slots.length : 0})`}
       >
-        <SlotDetails
-          cityName={city.name}
-          foundAt={foundAt}
-          slots={foundSlots}
-        />
+        {serviceSlots && <SlotDetails {...serviceSlots} />}
       </SlotsModal>
     </div>
   );

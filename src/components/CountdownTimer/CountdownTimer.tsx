@@ -9,7 +9,7 @@ const formatTime = (totalSeconds: number): string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
-const getRemainingSeconds = (targetTimestamp?: number | null, intervalMinutes: number = 1): number => {
+const getRemainingSeconds = (intervalMinutes: number, targetTimestamp?: number | null): number => {
   if (targetTimestamp && targetTimestamp > Date.now()) {
     return Math.max(0, Math.round((targetTimestamp - Date.now()) / 1000));
   }
@@ -22,20 +22,20 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   targetTimestamp,
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(() =>
-    getRemainingSeconds(targetTimestamp, intervalMinutes)
+    getRemainingSeconds(intervalMinutes, targetTimestamp)
   );
 
   useEffect(() => {
-    setTimeLeft(getRemainingSeconds(targetTimestamp, intervalMinutes));
-
     if (!isActive) return;
 
     const timerId = setInterval(() => {
-      setTimeLeft(getRemainingSeconds(targetTimestamp, intervalMinutes));
+      setTimeLeft(getRemainingSeconds(intervalMinutes, targetTimestamp));
     }, 1000);
 
     return () => clearInterval(timerId);
   }, [isActive, intervalMinutes, targetTimestamp]);
+
+  const displayTime = isActive ? timeLeft : intervalMinutes * 60;
 
   return (
     <div className={`${styles.timerContainer} ${isActive ? styles.timerActive : ''}`}>
@@ -43,7 +43,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
         size={15}
         className={isActive ? styles.timerIconActive : styles.timerIcon}
       />
-      <span className={styles.timeText}>{formatTime(timeLeft)}</span>
+      <span className={styles.timeText}>{formatTime(displayTime)}</span>
     </div>
   );
 };

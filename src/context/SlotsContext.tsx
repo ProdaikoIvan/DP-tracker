@@ -95,7 +95,8 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
 
   const clearSlotsForService = async (cityName: string): Promise<void> => {
     if (!slotsMap[cityName]) return;
-    const { [cityName]: _, ...updatedMap } = slotsMap;
+    const updatedMap = { ...slotsMap };
+    delete updatedMap[cityName];
     setSlotsMap(updatedMap);
     await setItem(SLOTS_STORAGE_KEY, updatedMap);
   };

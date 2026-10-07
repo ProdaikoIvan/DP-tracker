@@ -1,7 +1,3 @@
-import type { SlotDay } from '../../../../services/slotService.types';
+import type { ServiceSlotsData } from '../../../../context/SlotsContext.types';
 
-export interface SlotDetailsProps {
-  cityName: string;
-  foundAt?: number;
-  slots: SlotDay[];
-}
+export type SlotDetailsProps = ServiceSlotsData;

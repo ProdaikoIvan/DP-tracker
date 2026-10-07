@@ -21,12 +21,7 @@ const AllSlotsList: React.FC<AllSlotsListProps> = ({ slotsMap }) => {
   return (
     <div className={styles.container}>
       {items.map((item) => (
-        <SlotDetails
-          key={item.cityName}
-          cityName={item.cityName}
-          foundAt={item.foundAt}
-          slots={item.slots}
-        />
+        <SlotDetails key={item.cityName} {...item} />
       ))}
     </div>
   );

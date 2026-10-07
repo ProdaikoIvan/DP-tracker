@@ -31,7 +31,6 @@ const MainPage: React.FC = () => {
         onBack={() => selectDepartment(null)}
         onReset={() => setIsResetConfirmOpen(true)}
         onOpenStats={() => setIsStatsModalOpen(true)}
-        hasSlots={totalSlots > 0}
         slotsCount={totalSlots}
         isSoundEnabled={isSoundEnabled}
         onToggleSound={toggleSound}

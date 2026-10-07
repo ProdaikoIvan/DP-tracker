@@ -1,7 +1,6 @@
 export interface City {
   name: string;
   address: string;
-  disabled: boolean;
   url: string;
 }
 
