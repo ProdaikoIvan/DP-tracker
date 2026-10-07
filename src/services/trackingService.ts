@@ -53,16 +53,13 @@ export const stopTrackingSession = async (currentState?: TrackingState): Promise
 export const handleFoundSlots = async (cityName: string, tabId: number, slots: SlotDay[]): Promise<void> => {
   await stopTrackingSession();
 
-  const now = new Date();
-  const timestamp = `${now.toLocaleDateString('uk-UA')} о ${now.toLocaleTimeString('uk-UA')}`;
-
   const currentSlotsMap = (await getItem<SlotsDataMap>(SLOTS_STORAGE_KEY)) || {};
   const updatedSlotsMap: SlotsDataMap = {
     ...currentSlotsMap,
     [cityName]: {
       cityName,
       slots,
-      foundAt: timestamp,
+      foundAt: Date.now(),
     },
   };
 

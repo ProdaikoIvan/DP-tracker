@@ -1,9 +1,12 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
+import { formatFoundAt } from '../../../../utils/date';
 import type { SlotDetailsProps } from './SlotDetails.types';
 import styles from './SlotDetails.module.css';
 
 const SlotDetails: React.FC<SlotDetailsProps> = ({ cityName, foundAt, slots }) => {
+  const formattedDate = formatFoundAt(foundAt);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -11,10 +14,10 @@ const SlotDetails: React.FC<SlotDetailsProps> = ({ cityName, foundAt, slots }) =
         <span className={styles.countBadge}>{slots.length} дат</span>
       </div>
 
-      {foundAt && (
+      {formattedDate && (
         <div className={styles.timestampRow}>
           <Clock size={12} className={styles.clockIcon} />
-          <span>Знайдено: {foundAt}</span>
+          <span>Знайдено: {formattedDate}</span>
         </div>
       )}
 

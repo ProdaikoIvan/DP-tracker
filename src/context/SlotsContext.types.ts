@@ -7,7 +7,7 @@ import type { SelectedDepartment } from '../types/departments.types';
 export interface ServiceSlotsData {
   cityName: string;
   slots: SlotDay[];
-  foundAt: string;
+  foundAt: number;
 }
 
 export type SlotsDataMap = Record<string, ServiceSlotsData>;

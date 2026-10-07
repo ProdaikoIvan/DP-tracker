@@ -27,7 +27,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
 
   const serviceSlots = getServiceSlots(city.name);
   const foundSlots = serviceSlots?.slots ?? [];
-  const foundAt = serviceSlots?.foundAt ?? '';
+  const foundAt = serviceSlots?.foundAt;
 
   const toggleTracking = async () => {
     if (isTracking) {

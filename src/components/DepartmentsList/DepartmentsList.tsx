@@ -7,7 +7,7 @@ import styles from './DepartmentsList.module.css';
 
 const DepartmentsList: React.FC<DepartmentsListProps> = ({ onSelectDepartment }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [openItems, setOpenItems] = useState<string[]>(['Польща']);
+  const [openItems, setOpenItems] = useState<string[]>([]);
 
   const filteredCountries = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -90,7 +90,7 @@ const DepartmentsList: React.FC<DepartmentsListProps> = ({ onSelectDepartment })
                   {country.cities.map((city) => (
                     <button
                       type="button"
-                      key={city.name}
+                      key={`${city.name}-${city.address}`}
                       className={styles.cityCard}
                       onClick={() => onSelectDepartment({ city, country })}
                     >

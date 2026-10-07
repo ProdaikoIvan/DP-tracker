@@ -5,7 +5,9 @@ import type { AllSlotsListProps } from './AllSlotsList.types';
 import styles from './AllSlotsList.module.css';
 
 const AllSlotsList: React.FC<AllSlotsListProps> = ({ slotsMap }) => {
-  const items = Object.values(slotsMap).filter((item) => item.slots.length > 0);
+  const items = Object.values(slotsMap)
+    .filter((item) => item.slots.length > 0)
+    .sort((a, b) => b.foundAt - a.foundAt);
 
   if (items.length === 0) {
     return (
