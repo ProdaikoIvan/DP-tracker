@@ -1,42 +1,42 @@
-import { getItem, setItem } from '../services/storageService';
 import { checkAvailableSlots } from '../services/slotService';
 import { stopBadgeBlinking } from '../services/badgeService';
+import { TRACKER_ALARM_PREFIX } from '../constants/storage.constants';
 import {
-  TRACKING_STATE_KEY,
-  TRACKING_ALARM_NAME,
-} from '../constants/storage.constants';
-import type { TrackingState } from '../types/tracking.types';
-import { handleFoundSlots, stopTrackingSession } from '../services/trackingService';
+  getStoredActiveTrackers,
+  updateTrackerTimestamp,
+  handleFoundSlots,
+  stopTrackerSession,
+} from '../services/trackingService';
 
-const handleAlarmCheck = async (): Promise<void> => {
-  const state = await getItem<TrackingState>(TRACKING_STATE_KEY);
-  if (!state?.isTracking || !state.tabId || !state.cityName) {
-    await chrome.alarms.clear(TRACKING_ALARM_NAME);
+const handleAlarmCheck = async (cityName: string): Promise<void> => {
+  const trackers = await getStoredActiveTrackers();
+  const tracker = trackers[cityName];
+  if (!tracker) {
+    await chrome.alarms.clear(`${TRACKER_ALARM_PREFIX}${cityName}`);
     return;
   }
 
-  const nextCheck = Date.now() + state.intervalMinutes * 60 * 1000;
-  await setItem<TrackingState>(TRACKING_STATE_KEY, {
-    ...state,
-    nextCheckTimestamp: nextCheck,
-  });
+  const nextCheck = Date.now() + tracker.intervalMinutes * 60 * 1000;
+  await updateTrackerTimestamp(cityName, nextCheck);
 
-  const slots = await checkAvailableSlots(state.tabId);
+  const slots = await checkAvailableSlots(tracker.tabId);
   if (slots.length > 0) {
-    await handleFoundSlots(state.cityName, state.tabId, slots);
+    await handleFoundSlots(cityName, tracker.tabId, slots);
   }
 };
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === TRACKING_ALARM_NAME) {
-    void handleAlarmCheck();
+  if (alarm.name.startsWith(TRACKER_ALARM_PREFIX)) {
+    const cityName = alarm.name.slice(TRACKER_ALARM_PREFIX.length);
+    void handleAlarmCheck(cityName);
   }
 });
 
 chrome.tabs.onRemoved.addListener(async (closedTabId) => {
-  const state = await getItem<TrackingState>(TRACKING_STATE_KEY);
-  if (state?.isTracking && state.tabId === closedTabId) {
-    await stopTrackingSession(state);
+  const trackers = await getStoredActiveTrackers();
+  const trackerEntry = Object.values(trackers).find((t) => t.tabId === closedTabId);
+  if (trackerEntry) {
+    await stopTrackerSession(trackerEntry.cityName);
   }
 });
 
@@ -45,4 +45,3 @@ chrome.runtime.onMessage.addListener((message) => {
     void stopBadgeBlinking();
   }
 });
-

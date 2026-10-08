@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
+import { IconButton } from '../IconButton';
 import { departments } from '../../data/departments';
 import CountryCard from '../CountryCard/CountryCard';
 import CountryServicesList from '../CountryServicesList/CountryServicesList';
@@ -51,14 +52,13 @@ const DepartmentsList: React.FC<DepartmentsListProps> = ({ onSelectDepartment })
           className={styles.searchInput}
         />
         {isSearching && (
-          <button
-            type="button"
+          <IconButton
+            icon={X}
             onClick={() => setSearchQuery('')}
+            title="Очистити пошук"
+            size="sm"
             className={styles.clearSearchBtn}
-            aria-label="Очистити пошук"
-          >
-            <X size={12} />
-          </button>
+          />
         )}
       </div>
 

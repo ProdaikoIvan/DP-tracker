@@ -1,3 +1,5 @@
 import type { ServiceSlotsData } from '../../../../context/SlotsContext.types';
 
-export type SlotDetailsProps = ServiceSlotsData;
+export interface SlotDetailsProps extends ServiceSlotsData {
+  onDelete?: (cityName: string) => void;
+}

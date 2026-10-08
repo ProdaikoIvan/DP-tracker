@@ -1,9 +1,11 @@
-import type { PollingInterval } from '../components/IntervalSelector/IntervalSelector.types';
+export type PollingInterval = 1 | 2 | 3 | 5;
 
-export interface TrackingState {
-  isTracking: boolean;
-  cityName: string | null;
-  tabId: number | null;
+export interface ActiveTracker {
+  cityName: string;
+  countryCode: string;
+  tabId: number;
   intervalMinutes: PollingInterval;
-  nextCheckTimestamp: number | null;
+  nextCheckTimestamp: number;
 }
+
+export type ActiveTrackersMap = Record<string, ActiveTracker>;

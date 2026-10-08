@@ -1,57 +1,80 @@
 import { getItem, setItem } from './storageService';
-import { TRACKING_STATE_KEY, TRACKING_ALARM_NAME, SLOTS_STORAGE_KEY, NOTIFICATIONS_SOUND_KEY } from '../constants/storage.constants';
+import {
+  ACTIVE_TRACKERS_KEY,
+  TRACKER_ALARM_PREFIX,
+  SLOTS_STORAGE_KEY,
+  NOTIFICATIONS_SOUND_KEY,
+} from '../constants/storage.constants';
 import { startBadgeBlinking } from './badgeService';
 import { playNotificationSoundInTab } from './soundService';
-import type { TrackingState } from '../types/tracking.types';
-import type { PollingInterval } from '../components/IntervalSelector/IntervalSelector.types';
+import type { ActiveTracker, ActiveTrackersMap, PollingInterval } from '../types/tracking.types';
+import type { City } from '../types/departments.types';
 import type { SlotDay } from './slotService.types';
 import type { SlotsDataMap } from '../context/SlotsContext.types';
 
-export const initialTrackingState: TrackingState = {
-  isTracking: false,
-  cityName: null,
-  tabId: null,
-  intervalMinutes: 1,
-  nextCheckTimestamp: null,
+export const getStoredActiveTrackers = async (): Promise<ActiveTrackersMap> => {
+  const data = await getItem<ActiveTrackersMap>(ACTIVE_TRACKERS_KEY);
+  return data || {};
 };
 
-export const getStoredTrackingState = async (): Promise<TrackingState> => {
-  const state = await getItem<TrackingState>(TRACKING_STATE_KEY);
-  return state || initialTrackingState;
-};
-
-export const startTrackingSession = async (
-  cityName: string,
+export const startTrackerSession = async (
+  city: City,
+  countryCode: string,
   tabId: number,
   interval: PollingInterval
-): Promise<TrackingState> => {
+): Promise<ActiveTrackersMap> => {
+  const current = await getStoredActiveTrackers();
   const nextCheck = Date.now() + interval * 60 * 1000;
-  const newState: TrackingState = {
-    isTracking: true,
-    cityName,
+  const newTracker: ActiveTracker = {
+    cityName: city.name,
+    countryCode,
     tabId,
     intervalMinutes: interval,
     nextCheckTimestamp: nextCheck,
   };
-  await setItem(TRACKING_STATE_KEY, newState);
-  await chrome.alarms.create(TRACKING_ALARM_NAME, { periodInMinutes: interval });
-  return newState;
-};
-
-export const stopTrackingSession = async (currentState?: TrackingState): Promise<TrackingState> => {
-  const base = currentState || (await getStoredTrackingState());
-  const newState: TrackingState = {
-    ...base,
-    isTracking: false,
-    nextCheckTimestamp: null,
+  const updated: ActiveTrackersMap = {
+    ...current,
+    [city.name]: newTracker,
   };
-  await chrome.alarms.clear(TRACKING_ALARM_NAME);
-  await setItem(TRACKING_STATE_KEY, newState);
-  return newState;
+  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  await chrome.alarms.create(`${TRACKER_ALARM_PREFIX}${city.name}`, { periodInMinutes: interval });
+  return updated;
 };
 
-export const handleFoundSlots = async (cityName: string, tabId: number, slots: SlotDay[]): Promise<void> => {
-  await stopTrackingSession();
+export const stopTrackerSession = async (cityName: string): Promise<ActiveTrackersMap> => {
+  const current = await getStoredActiveTrackers();
+  if (!current[cityName]) return current;
+
+  const updated = { ...current };
+  delete updated[cityName];
+
+  await chrome.alarms.clear(`${TRACKER_ALARM_PREFIX}${cityName}`);
+  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  return updated;
+};
+
+export const updateTrackerTimestamp = async (
+  cityName: string,
+  nextCheckTimestamp: number
+): Promise<void> => {
+  const current = await getStoredActiveTrackers();
+  if (!current[cityName]) return;
+  const updated: ActiveTrackersMap = {
+    ...current,
+    [cityName]: {
+      ...current[cityName],
+      nextCheckTimestamp,
+    },
+  };
+  await setItem(ACTIVE_TRACKERS_KEY, updated);
+};
+
+export const handleFoundSlots = async (
+  cityName: string,
+  tabId: number,
+  slots: SlotDay[]
+): Promise<void> => {
+  await stopTrackerSession(cityName);
 
   const currentSlotsMap = (await getItem<SlotsDataMap>(SLOTS_STORAGE_KEY)) || {};
   const updatedSlotsMap: SlotsDataMap = {
@@ -64,7 +87,6 @@ export const handleFoundSlots = async (cityName: string, tabId: number, slots: S
   };
 
   await setItem(SLOTS_STORAGE_KEY, updatedSlotsMap);
-
   await startBadgeBlinking();
 
   const soundEnabled = await getItem<boolean>(NOTIFICATIONS_SOUND_KEY);

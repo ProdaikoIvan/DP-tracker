@@ -40,23 +40,6 @@
   color: var(--text-primary);
 }
 
-.closeButton {
-  all: unset;
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  padding: 4px;
-  transition: var(--transition-fast);
-}
-
-.closeButton:hover {
-  color: var(--text-primary);
-  background-color: var(--btn-hover);
-}
-
 .content {
   padding: 14px 16px;
   overflow-y: auto;

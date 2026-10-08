@@ -47,24 +47,8 @@
 }
 
 .clearSearchBtn {
-  all: unset;
   position: absolute;
   right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: var(--badge-bg);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.clearSearchBtn:hover {
-  color: var(--text-primary);
-  background-color: var(--btn-hover);
 }
 
 .countriesGrid {

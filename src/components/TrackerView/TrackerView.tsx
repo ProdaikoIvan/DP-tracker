@@ -1,112 +1,69 @@
 import React, { useState } from 'react';
-import { MapPin, Play, Pause, Eye } from 'lucide-react';
-import IntervalSelector from '../IntervalSelector/IntervalSelector';
-import CountdownTimer from '../CountdownTimer/CountdownTimer';
+import NavigationHeader from '../NavigationHeader/NavigationHeader';
+import TrackerControls from '../TrackerControls/TrackerControls';
+import TrackerStatusBar from '../TrackerStatusBar/TrackerStatusBar';
 import { SlotsModal, SlotDetails } from '../SlotsModal';
-import { getActiveTab } from '../../services/tabService';
-import { checkAvailableSlots } from '../../services/slotService';
-import { handleFoundSlots } from '../../services/trackingService';
 import { useSlots } from '../../context/SlotsContext';
 import type { TrackerViewProps } from './TrackerView.types';
-import type { PollingInterval } from '../IntervalSelector/IntervalSelector.types';
+import type { PollingInterval } from '../../types/tracking.types';
 import styles from './TrackerView.module.css';
 
-const TrackerView: React.FC<TrackerViewProps> = ({ city }) => {
+const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
-    trackingState,
-    startTracking,
-    stopTracking,
+    activeTrackers,
+    startCityTracker,
+    stopCityTracker,
+    updateCityInterval,
     getServiceSlots,
-    clearSlotsForService,
   } = useSlots();
 
-  const isTracking = trackingState.isTracking && trackingState.cityName === city.name;
-  const activeInterval = isTracking ? trackingState.intervalMinutes : selectedInterval;
+  const currentTracker = activeTrackers[city.name];
+  const isTracking = Boolean(currentTracker);
+  const activeInterval = currentTracker ? currentTracker.intervalMinutes : selectedInterval;
 
   const serviceSlots = getServiceSlots(city.name);
+  const hasSlots = Boolean(serviceSlots && serviceSlots.slots.length > 0);
 
-  const toggleTracking = async () => {
+  const handleToggleTracking = () => {
     if (isTracking) {
-      await stopTracking();
+      void stopCityTracker(city.name);
     } else {
-      const tab = await getActiveTab();
-      if (!tab?.id) return;
-
-      await clearSlotsForService(city.name);
-      await startTracking(city.name, tab.id, selectedInterval);
-
-      const slots = await checkAvailableSlots(tab.id);
-      if (slots.length > 0) {
-        await handleFoundSlots(city.name, tab.id, slots);
-      }
+      void startCityTracker(city, country, selectedInterval);
     }
   };
 
-  const hasSlots = Boolean(serviceSlots && serviceSlots.slots.length > 0);
-  const isStatusActive = hasSlots || isTracking;
+  const handleIntervalChange = (val: PollingInterval) => {
+    setSelectedInterval(val);
+    if (isTracking) {
+      void updateCityInterval(city.name, val);
+    }
+  };
 
   return (
     <div className={styles.container}>
-      <div className={`${styles.serviceCard} ${isTracking ? styles.serviceCardActive : ''}`}>
-        <div className={styles.serviceInfo}>
-          <h2 className={styles.serviceTitle}>{city.name}</h2>
-          <div className={styles.addressRow}>
-            <MapPin size={16} className={styles.pinIcon} />
-            <span>{city.address}</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => void toggleTracking()}
-          className={`${styles.playPauseButton} ${isTracking ? styles.playPauseButtonActive : ''}`}
-          aria-label={isTracking ? 'Призупинити відстеження' : 'Запустити відстеження'}
-          title={isTracking ? 'Пауза' : 'Старт'}
-        >
-          {isTracking ? <Pause size={24} /> : <Play size={24} />}
-        </button>
-      </div>
-
-      <IntervalSelector
-        value={activeInterval}
-        onChange={(val) => {
-          setSelectedInterval(val);
-          if (isTracking && trackingState.tabId) {
-            void startTracking(city.name, trackingState.tabId, val);
-          }
-        }}
+      <NavigationHeader
+        onBack={onBack}
+        countryCode={country.code}
+        title={city.name}
+        subtitle={city.address}
       />
 
-      <div className={styles.statusBar}>
-        <div className={styles.statusIndicator}>
-          <div className={isStatusActive ? styles.statusDotActive : styles.statusDotPaused} />
-          <span className={isStatusActive ? styles.statusTextActive : styles.statusTextPaused}>
-            {hasSlots
-              ? 'Знайдено вільні дати!'
-              : isTracking
-                ? `Моніторинг активний (${activeInterval} хв)`
-                : 'На паузі'}
-          </span>
-          {hasSlots && (
-            <button
-              type="button"
-              className={styles.viewSlotsButton}
-              onClick={() => setIsModalOpen(true)}
-              title="Переглянути вільні дати"
-            >
-              <Eye size={13} />
-              <span>Переглянути</span>
-            </button>
-          )}
-        </div>
+      <div className={styles.content}>
+        <TrackerControls
+          interval={activeInterval}
+          onIntervalChange={handleIntervalChange}
+          isTracking={isTracking}
+          onToggleTracking={handleToggleTracking}
+        />
 
-        <CountdownTimer
-          key={isTracking ? (trackingState.nextCheckTimestamp ?? 'active') : activeInterval}
-          isActive={isTracking}
+        <TrackerStatusBar
+          isTracking={isTracking}
+          hasSlots={hasSlots}
           intervalMinutes={activeInterval}
-          targetTimestamp={isTracking ? trackingState.nextCheckTimestamp : null}
+          nextCheckTimestamp={currentTracker ? currentTracker.nextCheckTimestamp : null}
+          onViewSlots={() => setIsModalOpen(true)}
         />
       </div>
 

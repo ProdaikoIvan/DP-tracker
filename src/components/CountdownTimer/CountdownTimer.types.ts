@@ -1,4 +1,4 @@
-import type { PollingInterval } from '../IntervalSelector/IntervalSelector.types';
+import type { PollingInterval } from '../../types/tracking.types';
 
 export interface CountdownTimerProps {
   isActive: boolean;

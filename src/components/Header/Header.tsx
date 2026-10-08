@@ -1,11 +1,9 @@
 import React from 'react';
-import { ArrowLeft, RotateCcw, CalendarDays, Bell, BellOff, Settings } from 'lucide-react';
+import { RotateCcw, CalendarDays, Bell, BellOff, Settings } from 'lucide-react';
 import type { HeaderProps } from './Header.types';
 import styles from './Header.module.css';
 
 const Header: React.FC<HeaderProps> = ({
-  onBack,
-  showBackButton,
   onReset,
   onOpenStats,
   slotsCount,
@@ -25,17 +23,6 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className={styles.rightSection}>
-        {showBackButton && (
-          <button
-            type="button"
-            className={styles.iconButton}
-            onClick={onBack}
-            aria-label="До списку відділень"
-            title="До списку відділень"
-          >
-            <ArrowLeft size={18} />
-          </button>
-        )}
         <button
           type="button"
           className={`${styles.iconButton} ${hasSlots ? styles.active : ''}`}

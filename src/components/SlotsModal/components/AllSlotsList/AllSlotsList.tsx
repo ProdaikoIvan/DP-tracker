@@ -4,7 +4,7 @@ import SlotDetails from '../SlotDetails/SlotDetails';
 import type { AllSlotsListProps } from './AllSlotsList.types';
 import styles from './AllSlotsList.module.css';
 
-const AllSlotsList: React.FC<AllSlotsListProps> = ({ slotsMap }) => {
+const AllSlotsList: React.FC<AllSlotsListProps> = ({ slotsMap, onDeleteSlot }) => {
   const items = Object.values(slotsMap)
     .filter((item) => item.slots.length > 0)
     .sort((a, b) => b.foundAt - a.foundAt);
@@ -21,7 +21,11 @@ const AllSlotsList: React.FC<AllSlotsListProps> = ({ slotsMap }) => {
   return (
     <div className={styles.container}>
       {items.map((item) => (
-        <SlotDetails key={item.cityName} {...item} />
+        <SlotDetails
+          key={item.cityName}
+          {...item}
+          onDelete={onDeleteSlot}
+        />
       ))}
     </div>
   );

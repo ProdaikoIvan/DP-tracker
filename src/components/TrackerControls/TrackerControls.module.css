@@ -1,0 +1,15 @@
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: var(--transition-default);
+}
+
+.cardActive {
+  border-color: var(--primary-green-border);
+  box-shadow: var(--shadow-sm);
+}

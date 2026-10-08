@@ -1,15 +1,31 @@
 import React from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, X } from 'lucide-react';
+import { IconButton } from '../../../IconButton';
 import { formatFoundAt } from '../../../../utils/date';
 import type { SlotDetailsProps } from './SlotDetails.types';
 import styles from './SlotDetails.module.css';
 
-const SlotDetails: React.FC<SlotDetailsProps> = ({ cityName, foundAt, slots }) => {
+const SlotDetails: React.FC<SlotDetailsProps> = ({
+  cityName,
+  foundAt,
+  slots,
+  onDelete,
+}) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h4 className={styles.cityTitle}>{cityName}</h4>
-        <span className={styles.countBadge}>{slots.length} дат</span>
+        <div className={styles.headerActions}>
+          <span className={styles.countBadge}>{slots.length} дат</span>
+          {onDelete && (
+            <IconButton
+              icon={X}
+              onClick={() => onDelete(cityName)}
+              title={`Видалити знайдені дати для ${cityName}`}
+              size="sm"
+            />
+          )}
+        </div>
       </div>
 
       <div className={styles.timestampRow}>

@@ -1,6 +1,7 @@
-export type PollingInterval = 1 | 2 | 3 | 5;
+import type { PollingInterval } from '../../types/tracking.types';
 
 export interface IntervalSelectorProps {
   value: PollingInterval;
   onChange: (interval: PollingInterval) => void;
+  disabled?: boolean;
 }

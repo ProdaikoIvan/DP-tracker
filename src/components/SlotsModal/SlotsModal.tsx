@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import { IconButton } from '../IconButton';
 import type { SlotsModalProps } from './SlotsModal.types';
 import styles from './SlotsModal.module.css';
 
@@ -16,14 +17,12 @@ const SlotsModal: React.FC<SlotsModalProps> = ({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3 className={styles.title}>{title}</h3>
-          <button
-            type="button"
+          <IconButton
+            icon={X}
             onClick={onClose}
-            className={styles.closeButton}
-            aria-label="Закрити"
-          >
-            <X size={18} />
-          </button>
+            title="Закрити"
+            size="md"
+          />
         </div>
 
         <div className={styles.content}>{children}</div>
