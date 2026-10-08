@@ -31,13 +31,11 @@ const DepartmentsList: React.FC<DepartmentsListProps> = ({ onSelectDepartment })
 
   if (selectedCountry) {
     return (
-      <div className={styles.container}>
-        <CountryServicesList
-          country={selectedCountry}
-          onBack={() => setSelectedCountry(null)}
-          onSelectDepartment={onSelectDepartment}
-        />
-      </div>
+      <CountryServicesList
+        country={selectedCountry}
+        onBack={() => setSelectedCountry(null)}
+        onSelectDepartment={onSelectDepartment}
+      />
     );
   }
 
