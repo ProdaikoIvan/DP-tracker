@@ -1,15 +1,7 @@
 import type { ReactNode } from 'react';
-import type { SlotDay } from '@/features/slots';
+import type { ServiceSlotsData, SlotsDataMap } from '@/features/slots';
 import type { ActiveTrackersMap, PollingInterval } from '@/features/tracker';
 import type { SelectedDepartment, City, Country } from '@/features/department';
-
-export interface ServiceSlotsData {
-  cityName: string;
-  slots: SlotDay[];
-  foundAt: number;
-}
-
-export type SlotsDataMap = Record<string, ServiceSlotsData>;
 
 export interface SlotsContextValue {
   slotsMap: SlotsDataMap;
@@ -20,7 +12,7 @@ export interface SlotsContextValue {
   selectedDepartment: SelectedDepartment | null;
   selectDepartment: (dept: SelectedDepartment | null) => void;
   toggleSound: () => Promise<void>;
-  startCityTracker: (city: City, country: Country, interval: PollingInterval) => Promise<void>;
+  startCityTracker: (city: City, country: Country, interval: PollingInterval) => Promise<boolean>;
   stopCityTracker: (cityName: string) => Promise<void>;
   updateCityInterval: (cityName: string, interval: PollingInterval) => Promise<void>;
   getServiceSlots: (cityName: string) => ServiceSlotsData | undefined;

@@ -1,4 +1,4 @@
-import type { SlotsDataMap } from '@/context/SlotsContext.types';
+import type { SlotsDataMap } from '../../../../types/slots.types';
 
 export interface AllSlotsListProps {
   slotsMap: SlotsDataMap;

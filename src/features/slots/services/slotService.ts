@@ -1,8 +1,28 @@
-import type {
-  FormExtractionData,
-  SlotDay,
-  SlotsResponse,
-} from './slotService.types';
+import { getItem, removeItem, removeField, updateItem } from '@/services/storageService';
+import { SLOTS_STORAGE_KEY } from '@/constants/storage.constants';
+import { stopAllBadgeBlinking } from '@/services/badgeService';
+import type { FormExtractionData, SlotsResponse } from './slotService.types';
+import type { SlotDay, SlotsDataMap } from '../types/slots.types';
+
+export const getStoredSlots = async (): Promise<SlotsDataMap> => {
+  const data = await getItem<SlotsDataMap>(SLOTS_STORAGE_KEY);
+  return data || {};
+};
+
+export const clearSlotsForCity = async (cityName: string): Promise<void> => {
+  await removeField<SlotsDataMap>(SLOTS_STORAGE_KEY, cityName);
+};
+
+export const clearAllSlotsData = async (): Promise<void> => {
+  await removeItem(SLOTS_STORAGE_KEY);
+  void stopAllBadgeBlinking();
+};
+
+export const saveFoundSlots = async (cityName: string, slots: SlotDay[]): Promise<void> => {
+  await updateItem<SlotsDataMap>(SLOTS_STORAGE_KEY, {
+    [cityName]: { cityName, slots, foundAt: Date.now() },
+  });
+};
 
 export const getFormDataFromPage = async (tabId: number): Promise<FormExtractionData | null> => {
   try {
