@@ -4,5 +4,6 @@ export * from './components/TrackerControls';
 export * from './components/TrackerStatusBar';
 export * from './components/TrackerView';
 export * from './components/TrackingActionButton';
+export * from './hooks/useActiveTrackers';
 export * from './services/trackingService';
 export type * from './types/tracker.types';

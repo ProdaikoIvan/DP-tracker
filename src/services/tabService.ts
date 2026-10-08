@@ -1,46 +1,13 @@
-import { departments } from '@/features/department';
-import type { SelectedDepartment } from '@/features/department';
-
-const departmentByHost = new Map<string, SelectedDepartment>(
-  departments.flatMap((country) =>
-    country.cities.map((city) => [new URL(city.url).hostname.toLowerCase(), { city, country }])
-  )
-);
-
-const departmentByName = new Map<string, SelectedDepartment>(
-  departments.flatMap((country) =>
-    country.cities.map((city) => [city.name.toLowerCase(), { city, country }])
-  )
-);
-
-export const findDepartmentByUrl = (targetUrl?: string): SelectedDepartment | null => {
-  if (!targetUrl) return null;
-  try {
-    return departmentByHost.get(new URL(targetUrl).hostname.toLowerCase()) ?? null;
-  } catch {
-    return null;
-  }
-};
-
 export const getActiveTab = async (): Promise<chrome.tabs.Tab | undefined> => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   return tab;
 };
 
-export const detectCurrentDepartment = async (): Promise<SelectedDepartment | null> => {
-  const activeTab = await getActiveTab();
-  return activeTab?.url ? findDepartmentByUrl(activeTab.url) : null;
-};
-
-export const resolveInitialDepartment = async (): Promise<SelectedDepartment | null> => {
-  return detectCurrentDepartment();
-};
-
-export const getDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.Tab | undefined> => {
+export const findTabByUrl = async (targetUrl: string): Promise<chrome.tabs.Tab | undefined> => {
   try {
-    const cityHost = new URL(cityUrl).hostname.toLowerCase();
+    const targetHost = new URL(targetUrl).hostname.toLowerCase();
     const activeTab = await getActiveTab();
-    if (activeTab?.url && new URL(activeTab.url).hostname.toLowerCase() === cityHost) {
+    if (activeTab?.url && new URL(activeTab.url).hostname.toLowerCase() === targetHost) {
       return activeTab;
     }
 
@@ -48,7 +15,7 @@ export const getDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.Tab
     return tabs.find((t) => {
       if (!t.url) return false;
       try {
-        return new URL(t.url).hostname.toLowerCase() === cityHost;
+        return new URL(t.url).hostname.toLowerCase() === targetHost;
       } catch {
         return false;
       }
@@ -58,25 +25,11 @@ export const getDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.Tab
   }
 };
 
-export const openDepartmentTab = async (url: string): Promise<void> => {
-  const existingTab = await getDepartmentTab(url);
-  if (existingTab?.id) {
-    await chrome.tabs.update(existingTab.id, { active: true });
-    return;
-  }
-  await chrome.tabs.create({ url, active: true });
-};
-
-export const ensureDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.Tab> => {
-  const existingTab = await getDepartmentTab(cityUrl);
+export const ensureTab = async (url: string): Promise<chrome.tabs.Tab> => {
+  const existingTab = await findTabByUrl(url);
   if (existingTab?.id) {
     await chrome.tabs.update(existingTab.id, { active: true });
     return existingTab;
   }
-  return chrome.tabs.create({ url: cityUrl, active: true });
+  return chrome.tabs.create({ url, active: true });
 };
-
-export const findDepartmentByCityName = (cityName: string): SelectedDepartment | null => {
-  return departmentByName.get(cityName.toLowerCase()) ?? null;
-};
-

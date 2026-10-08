@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, Trash2 } from 'lucide-react';
 import { IconButton, CountryFlag, Badge } from '@/components';
-import { findDepartmentByCityName } from '@/services/tabService';
+import { findDepartmentByCityName } from '@/features/department';
 import { formatFoundAt } from '@/utils/date';
 import type { SlotDetailsProps } from './SlotDetails.types';
 import styles from './SlotDetails.module.css';

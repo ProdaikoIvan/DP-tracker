@@ -4,7 +4,6 @@ let blinkInterval: ReturnType<typeof setInterval> | null = null;
 
 export const startBadgeBlinking = async (): Promise<void> => {
   if (blinkInterval) return;
-  if (chrome.extension?.getViews({ type: 'popup' }).length > 0) return;
   await chrome.action.setBadgeText({ text: '!' });
   await chrome.action.setBadgeBackgroundColor({ color: BADGE_ACTIVE_COLOR });
 

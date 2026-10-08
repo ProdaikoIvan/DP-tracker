@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { NavigationHeader } from '@/components';
 import { TrackerControls } from '../TrackerControls';
 import { TrackerStatusBar } from '../TrackerStatusBar';
-import { SlotsModal, SlotDetails } from '@/features/slots';
-import { useSlots } from '@/context/SlotsContext';
+import { SlotsModal, SlotDetails, useSlots } from '@/features/slots';
+import { useActiveTrackers } from '../../hooks/useActiveTrackers';
+import { startTracker, stopTrackerSession, updateTrackerInterval } from '../../services/trackingService';
 import type { TrackerViewProps } from './TrackerView.types';
 import type { PollingInterval } from '../../types/tracker.types';
 import styles from './TrackerView.module.css';
@@ -11,33 +12,28 @@ import styles from './TrackerView.module.css';
 const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {
-    activeTrackers,
-    startCityTracker,
-    stopCityTracker,
-    updateCityInterval,
-    getServiceSlots,
-  } = useSlots();
+  const activeTrackers = useActiveTrackers();
+  const { slotsMap } = useSlots();
 
   const currentTracker = activeTrackers[city.name];
   const isTracking = Boolean(currentTracker);
   const activeInterval = currentTracker ? currentTracker.intervalMinutes : selectedInterval;
 
-  const serviceSlots = getServiceSlots(city.name);
+  const serviceSlots = slotsMap[city.name];
   const hasSlots = Boolean(serviceSlots && serviceSlots.slots.length > 0);
 
   const handleToggleTracking = () => {
     if (isTracking) {
-      void stopCityTracker(city.name);
+      void stopTrackerSession(city.name);
     } else {
-      void startCityTracker(city, country, selectedInterval);
+      void startTracker(city, country.code, selectedInterval);
     }
   };
 
   const handleIntervalChange = (val: PollingInterval) => {
     setSelectedInterval(val);
     if (isTracking) {
-      void updateCityInterval(city.name, val);
+      void updateTrackerInterval(city.name, val);
     }
   };
 

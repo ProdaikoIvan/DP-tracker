@@ -1,13 +1,8 @@
-import { getItem, removeItem, removeField, updateItem } from '@/services/storageService';
+import { removeItem, removeField, updateItem } from '@/services/storageService';
 import { SLOTS_STORAGE_KEY } from '@/constants/storage.constants';
 import { stopAllBadgeBlinking } from '@/services/badgeService';
 import type { FormExtractionData, SlotsResponse } from './slotService.types';
 import type { SlotDay, SlotsDataMap } from '../types/slots.types';
-
-export const getStoredSlots = async (): Promise<SlotsDataMap> => {
-  const data = await getItem<SlotsDataMap>(SLOTS_STORAGE_KEY);
-  return data || {};
-};
 
 export const clearSlotsForCity = async (cityName: string): Promise<void> => {
   await removeField<SlotsDataMap>(SLOTS_STORAGE_KEY, cityName);
@@ -24,7 +19,7 @@ export const saveFoundSlots = async (cityName: string, slots: SlotDay[]): Promis
   });
 };
 
-export const getFormDataFromPage = async (tabId: number): Promise<FormExtractionData | null> => {
+const getFormDataFromPage = async (tabId: number): Promise<FormExtractionData | null> => {
   try {
     const [injectionResult] = await chrome.scripting.executeScript({
       target: { tabId },
@@ -55,7 +50,7 @@ export const getFormDataFromPage = async (tabId: number): Promise<FormExtraction
   }
 };
 
-export const fetchSlots = async (tabId: number, data: FormExtractionData): Promise<SlotDay[]> => {
+const fetchSlots = async (tabId: number, data: FormExtractionData): Promise<SlotDay[]> => {
   try {
     const [injectionResult] = await chrome.scripting.executeScript({
       target: { tabId },
@@ -88,8 +83,8 @@ export const fetchSlots = async (tabId: number, data: FormExtractionData): Promi
   }
 };
 
-export const checkAvailableSlots = async (tabId: number): Promise<SlotDay[]> => {
+export const checkAvailableSlots = async (tabId: number): Promise<SlotDay[] | null> => {
   const data = await getFormDataFromPage(tabId);
-  if (!data) return [];
+  if (!data) return null;
   return fetchSlots(tabId, data);
 };

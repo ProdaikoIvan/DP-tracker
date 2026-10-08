@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Header, ConfirmModal } from '@/components';
-import { DepartmentsList } from '@/features/department';
-import { TrackerView, ActiveTrackersList } from '@/features/tracker';
-import { SlotsModal, AllSlotsList } from '@/features/slots';
-import { useSlots } from '@/context/SlotsContext';
+import { useStorage } from '@/hooks';
+import { stopAllBadgeBlinking } from '@/services/badgeService';
+import { NOTIFICATIONS_SOUND_KEY } from '@/constants/storage.constants';
+import { DepartmentsList, useDepartmentSelection } from '@/features/department';
+import { TrackerView, ActiveTrackersList, useActiveTrackers, stopTrackerSession } from '@/features/tracker';
+import { SlotsModal, AllSlotsList, useSlots, clearAllSlotsData, clearSlotsForCity } from '@/features/slots';
 import type { ConfirmModalConfig } from './MainPage.types';
 
 const MainPage: React.FC = () => {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<ConfirmModalConfig | null>(null);
 
-  const {
-    selectedDepartment,
-    selectDepartment,
-    servicesWithSlotsCount,
-    isSoundEnabled,
-    toggleSound,
-    clearAllSlots,
-    clearSlotsForService,
-    slotsMap,
-    activeTrackers,
-    stopCityTracker,
-  } = useSlots();
+  const { selectedDepartment, selectDepartment } = useDepartmentSelection();
+  const { slotsMap, servicesWithSlotsCount } = useSlots();
+  const activeTrackers = useActiveTrackers();
+  const [isSoundEnabled, setIsSoundEnabled] = useStorage<boolean>(NOTIFICATIONS_SOUND_KEY, true);
+
+  useEffect(() => {
+    void stopAllBadgeBlinking();
+  }, []);
+
+  const handleToggleSound = () => {
+    void setIsSoundEnabled((prev) => !prev);
+  };
 
   const handleOpenResetConfirm = () => {
     setConfirmConfig({
@@ -29,7 +31,7 @@ const MainPage: React.FC = () => {
       message: 'Ви впевнені, що хочете видалити всі знайдені слоти?',
       onConfirm: async () => {
         setConfirmConfig(null);
-        await clearAllSlots();
+        await clearAllSlotsData();
       },
     });
   };
@@ -40,7 +42,7 @@ const MainPage: React.FC = () => {
       message: `Ви впевнені, що хочете видалити знайдені дати для міста ${cityName}?`,
       onConfirm: async () => {
         setConfirmConfig(null);
-        await clearSlotsForService(cityName);
+        await clearSlotsForCity(cityName);
       },
     });
   };
@@ -53,13 +55,13 @@ const MainPage: React.FC = () => {
           onOpenStats={() => setIsStatsModalOpen(true)}
           servicesCount={servicesWithSlotsCount}
           isSoundEnabled={isSoundEnabled}
-          onToggleSound={toggleSound}
+          onToggleSound={handleToggleSound}
         />
       }
       footer={
         <ActiveTrackersList
           activeTrackers={activeTrackers}
-          onStopTracker={(cityName) => void stopCityTracker(cityName)}
+          onStopTracker={(cityName) => void stopTrackerSession(cityName)}
         />
       }
       modals={

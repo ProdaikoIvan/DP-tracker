@@ -1,4 +1,5 @@
 export * from './components/SlotsModal';
 export * from './services/slotService';
-export type * from './services/slotService.types';
+export * from './hooks/useSlots';
 export type * from './types/slots.types';
+export type * from './hooks/useSlots.types';

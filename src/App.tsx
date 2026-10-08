@@ -1,13 +1,8 @@
-import { SlotsProvider } from './context/SlotsContext';
 import { MainPage } from './pages/MainPage';
 import './App.css';
 
 function App() {
-  return (
-    <SlotsProvider>
-      <MainPage />
-    </SlotsProvider>
-  );
+  return <MainPage />;
 }
 
 export default App;
