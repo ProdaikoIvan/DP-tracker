@@ -1,16 +1,17 @@
 import React from 'react';
 import { RotateCcw, CalendarDays, Bell, BellOff, Settings } from 'lucide-react';
+import { IconButton } from '@/components';
 import type { HeaderProps } from './Header.types';
 import styles from './Header.module.css';
 
 const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenStats,
-  slotsCount,
+  servicesCount,
   isSoundEnabled,
   onToggleSound,
 }) => {
-  const hasSlots = slotsCount > 0;
+  const hasServices = servicesCount > 0;
 
   return (
     <header className={styles.header}>
@@ -23,46 +24,39 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className={styles.rightSection}>
-        <button
-          type="button"
-          className={`${styles.iconButton} ${hasSlots ? styles.active : ''}`}
+        <IconButton
+          icon={RotateCcw}
           onClick={onReset}
-          disabled={!hasSlots}
-          aria-label="Скинути"
+          disabled={!hasServices}
+          active={hasServices}
           title="Скинути"
-        >
-          <RotateCcw size={18} />
-        </button>
-        <button
-          type="button"
-          className={`${styles.iconButton} ${styles.statsButton} ${hasSlots ? styles.active : ''}`}
+          variant="outline"
+          size="lg"
+        />
+        <IconButton
+          icon={CalendarDays}
           onClick={onOpenStats}
-          disabled={!hasSlots}
-          aria-label="Статистика вільних дат"
+          disabled={!hasServices}
+          active={hasServices}
+          badge={hasServices ? servicesCount : undefined}
           title="Статистика вільних дат"
-        >
-          <CalendarDays size={18} />
-          {hasSlots && (
-            <span className={styles.badgeCount}>{slotsCount}</span>
-          )}
-        </button>
-        <button
-          type="button"
-          className={`${styles.iconButton} ${isSoundEnabled ? styles.active : ''}`}
+          variant="outline"
+          size="lg"
+        />
+        <IconButton
+          icon={isSoundEnabled ? Bell : BellOff}
           onClick={onToggleSound}
-          aria-label={isSoundEnabled ? 'Вимкнути звук сповіщень' : 'Увімкнути звук сповіщень'}
+          active={isSoundEnabled}
           title={isSoundEnabled ? 'Звукові сповіщення увімкнено' : 'Звукові сповіщення вимкнено'}
-        >
-          {isSoundEnabled ? <Bell size={18} /> : <BellOff size={18} />}
-        </button>
-        <button
-          type="button"
-          className={styles.iconButton}
-          aria-label="Налаштування"
+          variant="outline"
+          size="lg"
+        />
+        <IconButton
+          icon={Settings}
           title="Налаштування"
-        >
-          <Settings size={18} />
-        </button>
+          variant="outline"
+          size="lg"
+        />
       </div>
     </header>
   );

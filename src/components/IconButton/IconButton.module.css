@@ -3,6 +3,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  box-sizing: border-box;
   color: var(--text-muted);
   cursor: pointer;
   transition: var(--transition-fast);
@@ -16,10 +18,11 @@
 }
 
 .button:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
+/* Sizes */
 .sm {
   width: 22px;
   height: 22px;
@@ -29,3 +32,64 @@
   width: 28px;
   height: 28px;
 }
+
+.lg {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+/* Variants */
+.ghost {
+  background-color: transparent;
+}
+
+.outline {
+  background-color: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.outline:hover:not(:disabled) {
+  background-color: var(--btn-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
+}
+
+/* Active State */
+.active {
+  background-color: var(--primary-green-translucent);
+  color: var(--primary-green);
+}
+
+.outline.active {
+  border-color: var(--primary-green-border);
+}
+
+.active:hover:not(:disabled) {
+  background-color: var(--primary-green-border);
+  color: var(--primary-green);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Badge */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--primary-green);
+  color: var(--bg-dark);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+}
+

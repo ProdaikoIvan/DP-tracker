@@ -14,6 +14,7 @@ export type SlotsDataMap = Record<string, ServiceSlotsData>;
 export interface SlotsContextValue {
   slotsMap: SlotsDataMap;
   totalSlots: number;
+  servicesWithSlotsCount: number;
   isSoundEnabled: boolean;
   activeTrackers: ActiveTrackersMap;
   selectedDepartment: SelectedDepartment | null;

@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   } | null>(null);
 
   const {
-    totalSlots,
+    servicesWithSlotsCount,
     isSoundEnabled,
     toggleSound,
     clearAllSlots,
@@ -53,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header
         onReset={handleOpenResetConfirm}
         onOpenStats={() => setIsStatsModalOpen(true)}
-        slotsCount={totalSlots}
+        servicesCount={servicesWithSlotsCount}
         isSoundEnabled={isSoundEnabled}
         onToggleSound={toggleSound}
       />

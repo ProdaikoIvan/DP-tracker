@@ -29,6 +29,10 @@ const SlotsContext = createContext<SlotsContextValue | null>(null);
 const calculateTotalSlots = (map: SlotsDataMap): number =>
   Object.values(map).reduce((sum, item) => sum + item.slots.length, 0);
 
+const calculateServicesWithSlots = (map: SlotsDataMap): number =>
+  Object.values(map).filter((item) => item.slots.length > 0).length;
+
+
 export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   const [slotsMap, setSlotsMap] = useState<SlotsDataMap>({});
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
@@ -107,12 +111,14 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   };
 
   const totalSlots = calculateTotalSlots(slotsMap);
+  const servicesWithSlotsCount = calculateServicesWithSlots(slotsMap);
 
   return (
     <SlotsContext.Provider
       value={{
         slotsMap,
         totalSlots,
+        servicesWithSlotsCount,
         isSoundEnabled,
         activeTrackers,
         selectedDepartment,

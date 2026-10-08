@@ -1,75 +1,51 @@
-# React + TypeScript + Vite
+# DP Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Google Chrome Extension (Manifest V3) for automated monitoring and tracking of available appointment slots in the electronic queue of the State Enterprise "Document" (Passport Service — [pasport.org.ua](https://pasport.org.ua)).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🎯 Purpose (What it is and why it's needed)
 
-## React Compiler
+Booking an appointment for passport and document services at "DP Document" centers across Ukraine and Europe is often challenging due to limited slot availability and high demand. 
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**DP Tracker** automates this process:
+* **Background Monitoring:** Continuously checks for open appointment dates at user-defined intervals (e.g., every 1, 2, 3, or 5 minutes) without requiring manual page reloads.
+* **Smart Session Injection:** Leverages the active tab's session to query the queue directly, bypassing anti-bot restrictions and maintaining legitimate session headers.
+* **Instant Alerts:** Triggers a pleasant polyphonic audio alert (Web Audio API) and a blinking badge on the extension icon as soon as free slots are detected.
+* **Multi-City Support:** Allows tracking multiple service centers simultaneously with live countdown timers.
+* **Directory & Auto-Detection:** Includes a built-in searchable catalog of all official centers (Ukraine, Poland, Czech Republic, Germany, Slovakia, Spain, Italy, etc.) and auto-detects the active center when browsing `pasport.org.ua`.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠 Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* **Core & Framework:** [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)
+* **Build Tool:** [Vite](https://vite.dev/)
+* **Platform:** Google Chrome Extension (Manifest V3)
+  * `chrome.alarms` — Background polling scheduler
+  * `chrome.scripting` — Context script injection & form data extraction
+  * `chrome.storage.local` — Persistent state and found slots caching
+  * `chrome.tabs` — Active tab synchronization and lifecycle monitoring
+  * `chrome.action` — Dynamic extension badge alerts
+* **Styling:** CSS Modules with centralized CSS Custom Properties (design tokens)
+* **Audio:** Web Audio API (synthesized chime notifications without external assets)
+* **Icons & Assets:** [Lucide React](https://lucide.dev/), [country-flag-icons](https://purecatamphetamine.github.io/country-flag-icons/)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Getting Started
 
-```
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Build the extension:**
+   ```bash
+   npm run build
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+3. **Load in Chrome:**
+   * Open `chrome://extensions/`
+   * Enable **Developer mode** (top right)
+   * Click **Load unpacked** and select the `dist` directory

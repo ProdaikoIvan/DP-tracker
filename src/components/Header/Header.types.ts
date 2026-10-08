@@ -1,7 +1,7 @@
 export interface HeaderProps {
   onReset: () => void;
   onOpenStats: () => void;
-  slotsCount: number;
+  servicesCount: number;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
 }
