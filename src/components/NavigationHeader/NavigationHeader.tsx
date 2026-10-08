@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowLeft, MapPin } from 'lucide-react';
+import { IconButton } from '../IconButton';
+import { Badge } from '../Badge';
 import CountryFlag from '../CountryFlag/CountryFlag';
 import type { NavigationHeaderProps } from './NavigationHeader.types';
 import styles from './NavigationHeader.module.css';
@@ -14,15 +16,12 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   return (
     <header className={styles.header}>
       <div className={styles.titleRow}>
-        <button
-          type="button"
-          className={styles.backBtn}
+        <IconButton
+          icon={ArrowLeft}
           onClick={onBack}
-          aria-label="Назад"
           title="Назад"
-        >
-          <ArrowLeft size={16} />
-        </button>
+          size="md"
+        />
 
         <div className={styles.titleInfo}>
           {countryCode && <CountryFlag code={countryCode} width={22} />}
@@ -30,7 +29,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
         </div>
 
         {badge !== undefined && (
-          <span className={styles.badge}>{badge}</span>
+          <Badge>{badge}</Badge>
         )}
       </div>
 

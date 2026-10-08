@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { SlotDay } from '../services/slotService.types';
-import type { ActiveTrackersMap, PollingInterval } from '../types/tracking.types';
-import type { SelectedDepartment, City, Country } from '../types/departments.types';
+import type { SlotDay } from '@/features/slots';
+import type { ActiveTrackersMap, PollingInterval } from '@/features/tracker';
+import type { SelectedDepartment, City, Country } from '@/features/department';
 
 export interface ServiceSlotsData {
   cityName: string;

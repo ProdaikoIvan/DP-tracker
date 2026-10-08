@@ -1,12 +1,11 @@
-import { checkAvailableSlots } from '../services/slotService';
-import { stopBadgeBlinking } from '../services/badgeService';
-import { TRACKER_ALARM_PREFIX } from '../constants/storage.constants';
+import { stopBadgeBlinking } from '@/services/badgeService';
+import { TRACKER_ALARM_PREFIX } from '@/constants/storage.constants';
 import {
   getStoredActiveTrackers,
   updateTrackerTimestamp,
-  handleFoundSlots,
+  performSlotCheck,
   stopTrackerSession,
-} from '../services/trackingService';
+} from '@/features/tracker';
 
 const handleAlarmCheck = async (cityName: string): Promise<void> => {
   const trackers = await getStoredActiveTrackers();
@@ -18,11 +17,7 @@ const handleAlarmCheck = async (cityName: string): Promise<void> => {
 
   const nextCheck = Date.now() + tracker.intervalMinutes * 60 * 1000;
   await updateTrackerTimestamp(cityName, nextCheck);
-
-  const slots = await checkAvailableSlots(tracker.tabId);
-  if (slots.length > 0) {
-    await handleFoundSlots(cityName, tracker.tabId, slots);
-  }
+  await performSlotCheck(cityName, tracker.tabId);
 };
 
 chrome.alarms.onAlarm.addListener((alarm) => {

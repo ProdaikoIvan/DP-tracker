@@ -1,5 +1,5 @@
 import { SlotsProvider } from './context/SlotsContext';
-import MainPage from './pages/MainPage/MainPage';
+import { MainPage } from './pages/MainPage';
 import './App.css';
 
 function App() {

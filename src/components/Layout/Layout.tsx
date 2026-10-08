@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import Header from '../Header/Header';
-import { ActiveTrackersList } from '../ActiveTrackersList';
-import { SlotsModal, AllSlotsList } from '../SlotsModal';
-import ConfirmModal from '../ConfirmModal/ConfirmModal';
-import { useSlots } from '../../context/SlotsContext';
+import { Header } from '../Header';
+import { ConfirmModal } from '../ConfirmModal';
+import { ActiveTrackersList } from '@/features/tracker';
+import { SlotsModal, AllSlotsList } from '@/features/slots';
+import { useSlots } from '@/context/SlotsContext';
 import type { LayoutProps } from './Layout.types';
 import styles from './Layout.module.css';
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [cityToDeleteSlots, setCityToDeleteSlots] = useState<string | null>(null);
+  const [confirmConfig, setConfirmConfig] = useState<{
+    title: string;
+    message: string;
+    onConfirm: () => Promise<void> | void;
+  } | null>(null);
 
   const {
     totalSlots,
@@ -23,22 +26,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     stopCityTracker,
   } = useSlots();
 
-  const handleConfirmReset = async () => {
-    setIsResetConfirmOpen(false);
-    await clearAllSlots();
+  const handleOpenResetConfirm = () => {
+    setConfirmConfig({
+      title: 'Скинути дані?',
+      message: 'Ви впевнені, що хочете видалити всі знайдені слоти?',
+      onConfirm: async () => {
+        setConfirmConfig(null);
+        await clearAllSlots();
+      },
+    });
   };
 
-  const handleConfirmDeleteCitySlots = async () => {
-    if (cityToDeleteSlots) {
-      await clearSlotsForService(cityToDeleteSlots);
-      setCityToDeleteSlots(null);
-    }
+  const handleOpenDeleteCityConfirm = (cityName: string) => {
+    setConfirmConfig({
+      title: 'Видалити знайдені дати?',
+      message: `Ви впевнені, що хочете видалити знайдені дати для міста ${cityName}?`,
+      onConfirm: async () => {
+        setConfirmConfig(null);
+        await clearSlotsForService(cityName);
+      },
+    });
   };
 
   return (
     <div className={styles.container}>
       <Header
-        onReset={() => setIsResetConfirmOpen(true)}
+        onReset={handleOpenResetConfirm}
         onOpenStats={() => setIsStatsModalOpen(true)}
         slotsCount={totalSlots}
         isSoundEnabled={isSoundEnabled}
@@ -61,28 +74,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         <AllSlotsList
           slotsMap={slotsMap}
-          onDeleteSlot={(cityName) => setCityToDeleteSlots(cityName)}
+          onDeleteSlot={handleOpenDeleteCityConfirm}
         />
       </SlotsModal>
 
       <ConfirmModal
-        isOpen={isResetConfirmOpen}
-        title="Скинути дані?"
-        message="Ви впевнені, що хочете видалити всі знайдені слоти?"
+        isOpen={Boolean(confirmConfig)}
+        title={confirmConfig?.title || ''}
+        message={confirmConfig?.message || ''}
         confirmText="Так"
         cancelText="Ні"
-        onConfirm={handleConfirmReset}
-        onCancel={() => setIsResetConfirmOpen(false)}
-      />
-
-      <ConfirmModal
-        isOpen={cityToDeleteSlots !== null}
-        title="Видалити знайдені дати?"
-        message={`Ви впевнені, що хочете видалити знайдені дати для міста ${cityToDeleteSlots || ''}?`}
-        confirmText="Так"
-        cancelText="Ні"
-        onConfirm={handleConfirmDeleteCitySlots}
-        onCancel={() => setCityToDeleteSlots(null)}
+        onConfirm={() => void confirmConfig?.onConfirm()}
+        onCancel={() => setConfirmConfig(null)}
       />
     </div>
   );

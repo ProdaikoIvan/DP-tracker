@@ -1,24 +1,22 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getItem, setItem, removeItem } from '../services/storageService';
-import { stopAllBadgeBlinking } from '../services/badgeService';
+import { getItem, setItem, removeItem } from '@/services/storageService';
+import { stopAllBadgeBlinking } from '@/services/badgeService';
 import {
   getStoredActiveTrackers,
   startTrackerSession,
   stopTrackerSession,
-  updateTrackerTimestamp,
-  handleFoundSlots,
-} from '../services/trackingService';
+  updateTrackerInterval,
+  performSlotCheck,
+} from '@/features/tracker';
 import {
   SLOTS_STORAGE_KEY,
   NOTIFICATIONS_SOUND_KEY,
   ACTIVE_TRACKERS_KEY,
-  TRACKER_ALARM_PREFIX,
-} from '../constants/storage.constants';
-import { openDepartmentTab, resolveInitialDepartment, ensureDepartmentTab } from '../services/tabService';
-import { checkAvailableSlots } from '../services/slotService';
-import type { SelectedDepartment, City, Country } from '../types/departments.types';
-import type { ActiveTrackersMap, PollingInterval } from '../types/tracking.types';
+} from '@/constants/storage.constants';
+import { openDepartmentTab, resolveInitialDepartment, ensureDepartmentTab } from '@/services/tabService';
+import type { SelectedDepartment, City, Country } from '@/features/department';
+import type { ActiveTrackersMap, PollingInterval } from '@/features/tracker';
 import type {
   ServiceSlotsData,
   SlotsDataMap,
@@ -82,11 +80,7 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     await clearSlotsForService(city.name);
     const updated = await startTrackerSession(city, country.code, tab.id, interval);
     setActiveTrackers(updated);
-
-    const slots = await checkAvailableSlots(tab.id);
-    if (slots.length > 0) {
-      await handleFoundSlots(city.name, tab.id, slots);
-    }
+    await performSlotCheck(city.name, tab.id);
   };
 
   const stopCityTracker = async (cityName: string): Promise<void> => {
@@ -95,12 +89,8 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
   };
 
   const updateCityInterval = async (cityName: string, interval: PollingInterval): Promise<void> => {
-    const current = activeTrackers[cityName];
-    if (current) {
-      await chrome.alarms.create(`${TRACKER_ALARM_PREFIX}${cityName}`, { periodInMinutes: interval });
-      const nextCheck = Date.now() + interval * 60 * 1000;
-      await updateTrackerTimestamp(cityName, nextCheck);
-    }
+    const updated = await updateTrackerInterval(cityName, interval);
+    setActiveTrackers(updated);
   };
 
   const selectDepartment = (dept: SelectedDepartment | null): void => {

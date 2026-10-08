@@ -1,9 +1,15 @@
-import { departments } from '../data/departments';
-import type { SelectedDepartment } from '../types/departments.types';
+import { departments } from '@/features/department';
+import type { SelectedDepartment } from '@/features/department';
 
 const departmentByHost = new Map<string, SelectedDepartment>(
   departments.flatMap((country) =>
     country.cities.map((city) => [new URL(city.url).hostname.toLowerCase(), { city, country }])
+  )
+);
+
+const departmentByName = new Map<string, SelectedDepartment>(
+  departments.flatMap((country) =>
+    country.cities.map((city) => [city.name.toLowerCase(), { city, country }])
   )
 );
 
@@ -71,10 +77,6 @@ export const ensureDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.
 };
 
 export const findDepartmentByCityName = (cityName: string): SelectedDepartment | null => {
-  for (const country of departments) {
-    const city = country.cities.find((c) => c.name === cityName);
-    if (city) return { city, country };
-  }
-  return null;
+  return departmentByName.get(cityName.toLowerCase()) ?? null;
 };
 

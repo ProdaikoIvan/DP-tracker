@@ -4,6 +4,11 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(import.meta.dirname, 'src'),
+    },
+  },
   build: {
     rollupOptions: {
       input: {
