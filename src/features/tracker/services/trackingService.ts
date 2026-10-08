@@ -14,7 +14,7 @@ import type { SlotDay } from '@/features/slots';
 import type { SlotsDataMap } from '@/context/SlotsContext.types';
 
 export const getStoredActiveTrackers = async (): Promise<ActiveTrackersMap> => {
-  const data = await getItem<ActiveTrackersMap>(ACTIVE_TRACKERS_KEY);
+  const data = await getItem<ActiveTrackersMap>(ACTIVE_TRACKERS_KEY, 'session');
   return data || {};
 };
 
@@ -37,7 +37,7 @@ export const startTrackerSession = async (
     ...current,
     [city.name]: newTracker,
   };
-  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  await setItem(ACTIVE_TRACKERS_KEY, updated, 'session');
   await chrome.alarms.create(`${TRACKER_ALARM_PREFIX}${city.name}`, { periodInMinutes: interval });
   return updated;
 };
@@ -50,7 +50,7 @@ export const stopTrackerSession = async (cityName: string): Promise<ActiveTracke
   delete updated[cityName];
 
   await chrome.alarms.clear(`${TRACKER_ALARM_PREFIX}${cityName}`);
-  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  await setItem(ACTIVE_TRACKERS_KEY, updated, 'session');
   return updated;
 };
 
@@ -67,7 +67,7 @@ export const updateTrackerTimestamp = async (
       nextCheckTimestamp,
     },
   };
-  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  await setItem(ACTIVE_TRACKERS_KEY, updated, 'session');
 };
 
 export const handleFoundSlots = async (
@@ -113,7 +113,7 @@ export const updateTrackerInterval = async (
     },
   };
 
-  await setItem(ACTIVE_TRACKERS_KEY, updated);
+  await setItem(ACTIVE_TRACKERS_KEY, updated, 'session');
   await chrome.alarms.create(`${TRACKER_ALARM_PREFIX}${cityName}`, { periodInMinutes: interval });
   return updated;
 };

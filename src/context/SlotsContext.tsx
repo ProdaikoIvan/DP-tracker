@@ -47,10 +47,8 @@ export const SlotsProvider: React.FC<SlotsProviderProps> = ({ children }) => {
     void resolveInitialDepartment().then((dept) => dept && setSelectedDepartment(dept));
 
     const handleStorageChange = (
-      changes: { [key: string]: chrome.storage.StorageChange },
-      areaName: string
+      changes: { [key: string]: chrome.storage.StorageChange }
     ) => {
-      if (areaName !== 'local') return;
       if (changes[SLOTS_STORAGE_KEY]) {
         setSlotsMap((changes[SLOTS_STORAGE_KEY].newValue as SlotsDataMap) || {});
       }
