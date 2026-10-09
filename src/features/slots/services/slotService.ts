@@ -1,7 +1,9 @@
 import { removeItem, removeField, updateItem } from '@/services/storageService';
 import { SLOTS_STORAGE_KEY } from '@/constants/storage.constants';
 import { stopAllBadgeBlinking } from '@/services/badgeService';
-import type { FormExtractionData, SlotsResponse } from './slotService.types';
+import { getFormDataFromPage } from './htmlParserService';
+import type { FormExtractionData } from './htmlParserService.types';
+import type { SlotsResponse } from './slotService.types';
 import type { SlotDay, SlotsDataMap } from '../types/slots.types';
 
 export const clearSlotsForCity = async (cityName: string): Promise<void> => {
@@ -17,37 +19,6 @@ export const saveFoundSlots = async (cityName: string, slots: SlotDay[]): Promis
   await updateItem<SlotsDataMap>(SLOTS_STORAGE_KEY, {
     [cityName]: { cityName, slots, foundAt: Date.now() },
   });
-};
-
-const getFormDataFromPage = async (tabId: number): Promise<FormExtractionData | null> => {
-  try {
-    const [injectionResult] = await chrome.scripting.executeScript({
-      target: { tabId },
-      func: () => {
-        const form = document.querySelector<HTMLFormElement>('form#services');
-        if (!form) return null;
-
-        const match = (form.getAttribute('x-data') || '').match(/qlogickFormHaku\((\{[\s\S]*?\})\)/);
-        if (!match) return null;
-
-        try {
-          const config = JSON.parse(match[1]);
-          return {
-            url: config.url,
-            csrf: config.csrf,
-            serviceCenterId: config.center,
-            serviceId: '4',
-          };
-        } catch {
-          return null;
-        }
-      },
-    });
-
-    return (injectionResult?.result as FormExtractionData) ?? null;
-  } catch {
-    return null;
-  }
 };
 
 const fetchSlots = async (tabId: number, data: FormExtractionData): Promise<SlotDay[]> => {
@@ -84,7 +55,7 @@ const fetchSlots = async (tabId: number, data: FormExtractionData): Promise<Slot
 };
 
 export const checkAvailableSlots = async (tabId: number): Promise<SlotDay[] | null> => {
-  const data = await getFormDataFromPage(tabId);
-  if (!data) return null;
-  return fetchSlots(tabId, data);
+  const formData = await getFormDataFromPage(tabId);
+  if (!formData) return null;
+  return fetchSlots(tabId, formData);
 };
