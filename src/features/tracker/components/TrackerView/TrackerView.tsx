@@ -4,7 +4,7 @@ import { TrackerControls } from '../TrackerControls';
 import { TrackerStatusBar } from '../TrackerStatusBar';
 import { SlotsModal, SlotDetails, useSlots } from '@/features/slots';
 import { useActiveTrackers } from '../../hooks/useActiveTrackers';
-import { startTracker, stopTrackerSession, updateTrackerInterval } from '../../services/trackingService';
+import { startTracker, stopTracker, updateTrackerInterval } from '../../services/trackingService';
 import type { TrackerViewProps } from './TrackerView.types';
 import type { PollingInterval } from '../../types/tracker.types';
 import styles from './TrackerView.module.css';
@@ -24,7 +24,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
 
   const handleToggleTracking = () => {
     if (isTracking) {
-      void stopTrackerSession(city.name);
+      void stopTracker(city.name);
     } else {
       void startTracker(city, country.code, selectedInterval);
     }

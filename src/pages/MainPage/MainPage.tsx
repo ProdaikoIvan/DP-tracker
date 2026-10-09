@@ -4,7 +4,7 @@ import { useStorage } from '@/hooks';
 import { stopAllBadgeBlinking } from '@/services/badgeService';
 import { NOTIFICATIONS_SOUND_KEY } from '@/constants/storage.constants';
 import { DepartmentsList, useDepartmentSelection } from '@/features/department';
-import { TrackerView, ActiveTrackersList, useActiveTrackers, stopTrackerSession } from '@/features/tracker';
+import { TrackerView, ActiveTrackersList, useActiveTrackers, stopTracker } from '@/features/tracker';
 import { SlotsModal, AllSlotsList, useSlots, clearAllSlotsData, clearSlotsForCity } from '@/features/slots';
 import type { ConfirmModalConfig } from './MainPage.types';
 
@@ -61,7 +61,7 @@ const MainPage: React.FC = () => {
       footer={
         <ActiveTrackersList
           activeTrackers={activeTrackers}
-          onStopTracker={(cityName) => void stopTrackerSession(cityName)}
+          onStopTracker={(cityName) => void stopTracker(cityName)}
         />
       }
       modals={

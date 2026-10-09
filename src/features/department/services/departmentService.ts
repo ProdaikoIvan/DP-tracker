@@ -1,5 +1,4 @@
 import { departments } from '../data/departments.data';
-import { getActiveTab, ensureTab } from '@/services/tabService';
 import type { SelectedDepartment } from '../types/department.types';
 
 const departmentByHost = new Map<string, SelectedDepartment>(
@@ -14,7 +13,7 @@ const departmentByName = new Map<string, SelectedDepartment>(
   )
 );
 
-export const findDepartmentByUrl = (targetUrl?: string): SelectedDepartment | null => {
+const findDepartmentByUrl = (targetUrl?: string): SelectedDepartment | null => {
   if (!targetUrl) return null;
   try {
     return departmentByHost.get(new URL(targetUrl).hostname.toLowerCase()) ?? null;
@@ -28,10 +27,19 @@ export const findDepartmentByCityName = (cityName: string): SelectedDepartment |
 };
 
 export const detectCurrentDepartment = async (): Promise<SelectedDepartment | null> => {
-  const activeTab = await getActiveTab();
+  const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   return activeTab?.url ? findDepartmentByUrl(activeTab.url) : null;
 };
 
 export const openDepartmentTab = async (cityUrl: string): Promise<chrome.tabs.Tab> => {
-  return ensureTab(cityUrl);
+  const host = new URL(cityUrl).hostname;
+  const tabs = await chrome.tabs.query({});
+  const existing = tabs.find((t) => t.url?.includes(host));
+
+  if (existing?.id) {
+    await chrome.tabs.update(existing.id, { active: true });
+    return existing;
+  }
+
+  return chrome.tabs.create({ url: cityUrl, active: true });
 };

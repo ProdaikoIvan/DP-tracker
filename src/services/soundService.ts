@@ -1,4 +1,7 @@
-export const playNotificationSound = (): void => {
+import { getItem } from './storageService';
+import { NOTIFICATIONS_SOUND_KEY } from '@/constants/storage.constants';
+
+const playNotificationSound = (): void => {
   try {
     const ctx = new AudioContext();
     const notes = [523.25, 659.25, 783.99, 1046.5];
@@ -32,7 +35,15 @@ export const playNotificationSound = (): void => {
   }
 };
 
+const isSoundNotificationEnabled = async (): Promise<boolean> => {
+  const enabled = await getItem<boolean>(NOTIFICATIONS_SOUND_KEY);
+  return enabled !== false;
+};
+
 export const playNotificationSoundInTab = async (tabId: number): Promise<void> => {
+  const isEnabled = await isSoundNotificationEnabled();
+  if (!isEnabled) return;
+
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
