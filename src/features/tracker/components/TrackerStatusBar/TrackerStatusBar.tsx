@@ -9,20 +9,36 @@ const TrackerStatusBar: React.FC<TrackerStatusBarProps> = ({
   hasSlots,
   intervalMinutes,
   nextCheckTimestamp,
+  hasError = false,
   onViewSlots,
 }) => {
   const isStatusActive = hasSlots || isTracking;
 
+  const getStatusDotClass = (): string => {
+    if (hasError) return styles.statusDotError;
+    if (isStatusActive) return styles.statusDotActive;
+    return styles.statusDotPaused;
+  };
+
+  const getStatusTextClass = (): string => {
+    if (hasError) return styles.statusTextError;
+    if (isStatusActive) return styles.statusTextActive;
+    return styles.statusTextPaused;
+  };
+
+  const getStatusText = (): string => {
+    if (hasSlots) return 'Знайдено вільні дати!';
+    if (hasError) return 'Помилка';
+    if (isTracking) return `Моніторинг активний (${intervalMinutes} хв)`;
+    return 'На паузі';
+  };
+
   return (
     <div className={styles.statusBar}>
       <div className={styles.statusIndicator}>
-        <div className={isStatusActive ? styles.statusDotActive : styles.statusDotPaused} />
-        <span className={isStatusActive ? styles.statusTextActive : styles.statusTextPaused}>
-          {hasSlots
-            ? 'Знайдено вільні дати!'
-            : isTracking
-              ? `Моніторинг активний (${intervalMinutes} хв)`
-              : 'На паузі'}
+        <div className={getStatusDotClass()} />
+        <span className={getStatusTextClass()}>
+          {getStatusText()}
         </span>
         {hasSlots && onViewSlots && (
           <button

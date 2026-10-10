@@ -13,13 +13,11 @@ const departmentByName = new Map<string, SelectedDepartment>(
   )
 );
 
-const findDepartmentByUrl = (targetUrl?: string): SelectedDepartment | null => {
-  if (!targetUrl) return null;
-  try {
-    return departmentByHost.get(new URL(targetUrl).hostname.toLowerCase()) ?? null;
-  } catch {
-    return null;
-  }
+const findDepartmentByUrl = (targetUrl: string): SelectedDepartment | null => {
+  const host = URL.parse(targetUrl)?.hostname.toLowerCase();
+  if (!host) return null;
+
+  return departmentByHost.get(host) ?? null;
 };
 
 export const findDepartmentByCityName = (cityName: string): SelectedDepartment | null => {

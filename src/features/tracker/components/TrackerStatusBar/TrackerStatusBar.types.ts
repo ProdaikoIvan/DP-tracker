@@ -5,5 +5,6 @@ export interface TrackerStatusBarProps {
   hasSlots: boolean;
   intervalMinutes: PollingInterval;
   nextCheckTimestamp?: number | null;
+  hasError?: boolean;
   onViewSlots?: () => void;
 }

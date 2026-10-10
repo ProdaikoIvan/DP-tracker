@@ -23,6 +23,8 @@
   --status-active: #00f090;
   --status-paused: #fbbf24;
   --status-paused-bg: rgba(251, 191, 36, 0.12);
+  --status-error: #ef4444;
+  --status-error-bg: rgba(239, 68, 68, 0.12);
 
   /* Buttons & Badges */
   --btn-bg: #141e30;
@@ -42,6 +44,7 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 20px rgba(0, 240, 144, 0.25);
+  --shadow-error-glow: 0 0 20px rgba(239, 68, 68, 0.25);
 
   /* Scrollbars */
   --scrollbar-track: var(--bg-dark);

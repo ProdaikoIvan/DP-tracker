@@ -13,7 +13,7 @@ export const getFormDataFromPage = async (tabId: number): Promise<FormExtraction
           const form = doc.querySelector<HTMLFormElement>('form#services');
           if (!form) return null;
 
-          const match = (form.getAttribute('x-data') || '').match(/qlogickFormHaku\((\{[\s\S]*?\})\)/);
+          const match = form.getAttribute('x-data')?.match(/qlogickFormHaku\((\{[\s\S]*?\})\)/);
           if (!match) return null;
 
           const config = JSON.parse(match[1]);

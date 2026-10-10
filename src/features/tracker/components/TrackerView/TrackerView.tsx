@@ -12,6 +12,7 @@ import styles from './TrackerView.module.css';
 const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
   const [selectedInterval, setSelectedInterval] = useState<PollingInterval>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const activeTrackers = useActiveTrackers();
   const { slotsMap } = useSlots();
 
@@ -22,16 +23,25 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
   const serviceSlots = slotsMap[city.name];
   const hasSlots = Boolean(serviceSlots && serviceSlots.slots.length > 0);
 
-  const handleToggleTracking = () => {
+  const handleToggleTracking = async () => {
+    setHasError(false);
     if (isTracking) {
-      void stopTracker(city.name);
+      await stopTracker(city.name);
     } else {
-      void startTracker(city, country.code, selectedInterval);
+      try {
+        const isStarted = await startTracker(city, country.code, selectedInterval);
+        if (!isStarted) {
+          setHasError(true);
+        }
+      } catch {
+        setHasError(true);
+      }
     }
   };
 
   const handleIntervalChange = (val: PollingInterval) => {
     setSelectedInterval(val);
+    setHasError(false);
     if (isTracking) {
       void updateTrackerInterval(city.name, val);
     }
@@ -59,6 +69,7 @@ const TrackerView: React.FC<TrackerViewProps> = ({ city, country, onBack }) => {
           hasSlots={hasSlots}
           intervalMinutes={activeInterval}
           nextCheckTimestamp={currentTracker ? currentTracker.nextCheckTimestamp : null}
+          hasError={hasError && !isTracking}
           onViewSlots={() => setIsModalOpen(true)}
         />
       </div>

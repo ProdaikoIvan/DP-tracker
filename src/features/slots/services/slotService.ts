@@ -41,14 +41,14 @@ const fetchSlots = async (tabId: number, data: FormExtractionData): Promise<Slot
           });
 
           const json = (await response.json()) as SlotsResponse;
-          return json.days || [];
+          return json.days ?? [];
         } catch {
           return [];
         }
       },
     });
 
-    return (injectionResult?.result as SlotDay[]) || [];
+    return (injectionResult?.result as SlotDay[]) ?? [];
   } catch {
     return [];
   }

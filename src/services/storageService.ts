@@ -18,8 +18,8 @@ export const updateItem = async <T extends object>(
   data: Partial<T>,
   area: StorageArea = 'local'
 ): Promise<void> => {
-  const current = (await getItem<T>(key, area)) || ({} as T);
-  await setItem(key, Object.assign(current, data), area);
+  const current = (await getItem<T>(key, area)) ?? ({} as T);
+  await setItem(key, { ...current, ...data }, area);
 };
 
 export const removeField = async <T extends object>(
@@ -27,7 +27,7 @@ export const removeField = async <T extends object>(
   field: string,
   area: StorageArea = 'local'
 ): Promise<void> => {
-  const current = (await getItem<T>(key, area)) || ({} as T);
+  const current = (await getItem<T>(key, area)) ?? ({} as T);
   delete (current as Record<string, unknown>)[field];
   await setItem(key, current, area);
 };

@@ -17,7 +17,8 @@
 }
 
 .statusDotActive,
-.statusDotPaused {
+.statusDotPaused,
+.statusDotError {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -32,12 +33,21 @@
   background-color: var(--status-paused);
 }
 
+.statusDotError {
+  background-color: var(--status-error);
+  box-shadow: var(--shadow-error-glow);
+}
+
 .statusTextActive {
   color: var(--status-active);
 }
 
 .statusTextPaused {
   color: var(--status-paused);
+}
+
+.statusTextError {
+  color: var(--status-error);
 }
 
 .viewSlotsButton {
