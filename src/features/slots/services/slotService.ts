@@ -1,6 +1,5 @@
 import { removeItem, removeField, updateItem } from '@/services/storageService';
 import { SLOTS_STORAGE_KEY } from '@/constants/storage.constants';
-import { stopAllBadgeBlinking } from '@/services/badgeService';
 import { getFormDataFromPage } from './htmlParserService';
 import type { FormExtractionData } from './htmlParserService.types';
 import type { SlotsResponse } from './slotService.types';
@@ -12,7 +11,6 @@ export const clearSlotsForCity = async (cityName: string): Promise<void> => {
 
 export const clearAllSlotsData = async (): Promise<void> => {
   await removeItem(SLOTS_STORAGE_KEY);
-  void stopAllBadgeBlinking();
 };
 
 export const saveFoundSlots = async (cityName: string, slots: SlotDay[]): Promise<void> => {

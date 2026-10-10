@@ -66,7 +66,6 @@ export const useTelegram = () => {
 
   const handleDisconnect = async () => {
     await disconnectTelegram();
-    await setConfig((prev) => ({ ...prev, isConnected: false, code: null }));
   };
 
   const toggleEnabled = async () => {

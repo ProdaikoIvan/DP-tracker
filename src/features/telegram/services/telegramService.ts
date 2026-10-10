@@ -2,6 +2,7 @@ import { getItem, setItem, updateItem } from '@/services/storageService';
 import { TELEGRAM_CONFIG_STORAGE_KEY, DEFAULT_TELEGRAM_CONFIG } from '../constants/telegram.constants';
 import type { TelegramConfig } from '../types/telegram.types';
 import type { SlotDay } from '@/features/slots';
+import { findDepartmentByCityName } from '@/features/department';
 
 export const getTelegramConfig = async (): Promise<TelegramConfig> => {
   const config = await getItem<TelegramConfig>(TELEGRAM_CONFIG_STORAGE_KEY);
@@ -47,9 +48,17 @@ export const sendTelegramNotification = async (cityName: string, slots: SlotDay[
   const config = await getTelegramConfig();
   if (!config.isConnected || !config.isEnabled || !config.code) return false;
 
+  const department = findDepartmentByCityName(cityName);
+  const cityUrl = department?.city.url;
+
   const datesList = slots.map((s) => `📅 ${s.date}`).slice(0, 5).join('\n');
   const extra = slots.length > 5 ? `\n<i>...та ще ${slots.length - 5} вільних дат</i>` : '';
-  const text = `🔥 <b>Знайдено вільні дати!</b>\n\n📍 <b>Місто:</b> ${cityName}\n${datesList}${extra}\n\n👉 <i>Перейдіть на сайт для запису!</i>`;
+  
+  const linkText = cityUrl 
+    ? `\n\n👉 <a href="${cityUrl}"><b>Перейдіть на сайт для запису!</b></a>` 
+    : `\n\n👉 <i>Перейдіть на сайт для запису!</i>`;
+
+  const text = `🔥 <b>Знайдено вільні дати!</b>\n\n📍 <b>Місто:</b> ${cityName}\n${datesList}${extra}${linkText}`;
 
   return sendPost(config.workerUrl, config.code, text);
 };
