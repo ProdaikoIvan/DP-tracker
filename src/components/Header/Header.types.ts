@@ -4,4 +4,5 @@ export interface HeaderProps {
   servicesCount: number;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
+  onOpenSettings: () => void;
 }

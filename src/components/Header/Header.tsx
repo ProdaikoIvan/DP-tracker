@@ -10,6 +10,7 @@ const Header: React.FC<HeaderProps> = ({
   servicesCount,
   isSoundEnabled,
   onToggleSound,
+  onOpenSettings,
 }) => {
   const hasServices = servicesCount > 0;
 
@@ -53,6 +54,7 @@ const Header: React.FC<HeaderProps> = ({
         />
         <IconButton
           icon={Settings}
+          onClick={onOpenSettings}
           title="Налаштування"
           variant="outline"
           size="lg"

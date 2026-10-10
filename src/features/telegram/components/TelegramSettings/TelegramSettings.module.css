@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--primary-green-translucent);
+  color: var(--primary-green);
+}
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+.statusBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.statusConnected {
+  background-color: var(--primary-green-translucent);
+  color: var(--status-active);
+  border: 1px solid var(--primary-green-border);
+}
+.statusWaiting {
+  background-color: var(--status-paused-bg);
+  color: var(--status-paused);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+.statusIdle {
+  background-color: var(--badge-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+.description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background-color: var(--primary-green);
+  color: var(--bg-dark);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+.primaryButton:hover {
+  background-color: var(--primary-green-hover);
+  box-shadow: var(--shadow-glow);
+}
+.waitingBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+}
+.waitingText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--status-paused);
+}
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background-color: var(--bg-surface);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+.toggleLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.actionsRow {
+  display: flex;
+  gap: 10px;
+}
+.secondaryButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.secondaryButton:hover:not(:disabled) { background-color: var(--btn-hover); border-color: var(--border-color-light); }
+.secondaryButton:disabled { opacity: 0.5; cursor: not-allowed; }
+.dangerButton { border-color: var(--status-error-bg); color: var(--status-error); }
+.dangerButton:hover:not(:disabled) { background-color: var(--status-error-bg); }
+.spinner { animation: spin 1s linear infinite; }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

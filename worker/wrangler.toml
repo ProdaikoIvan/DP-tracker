@@ -1,0 +1,11 @@
+name = "dp-tracker-telegram"
+main = "index.ts"
+compatibility_date = "2024-01-01"
+
+# KV Namespace binding:
+# kv_namespaces = [
+#   { binding = "TELEGRAM_SESSIONS", id = "<YOUR_KV_NAMESPACE_ID>" }
+# ]
+
+# Environment variables (secret):
+# BOT_TOKEN = "your_bot_token_from_botfather"

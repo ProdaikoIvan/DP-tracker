@@ -10,7 +10,8 @@
     "alarms"
   ],
   "host_permissions": [
-    "*://*.pasport.org.ua/*"
+    "*://*.pasport.org.ua/*",
+    "https://*.workers.dev/*"
   ],
   "background": {
     "service_worker": "background.js",
