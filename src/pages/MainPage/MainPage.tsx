@@ -34,6 +34,7 @@ const MainPage: React.FC = () => {
       onConfirm: async () => {
         setConfirmConfig(null);
         await clearAllSlotsData();
+        void stopAllBadgeBlinking();
       },
     });
   };

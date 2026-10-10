@@ -1,7 +1,7 @@
 import { getItem, updateItem, removeField } from '@/services/storageService';
 import { startBadgeBlinking } from '@/services/badgeService';
 import { playNotificationSoundInTab } from '@/services/soundService';
-import { openDepartmentTab } from '@/features/department';
+import { openTabWithUrl } from '@/utils/browserTabs';
 import { checkAvailableSlots, saveFoundSlots, clearSlotsForCity } from '@/features/slots';
 import { sendTelegramNotification } from '@/features/telegram';
 import { ACTIVE_TRACKERS_KEY, TRACKER_ALARM_PREFIX } from '@/constants/storage.constants';
@@ -12,6 +12,14 @@ import type { SlotDay } from '@/features/slots';
 const getTrackers = async (): Promise<ActiveTrackersMap> => {
   const data = await getItem<ActiveTrackersMap>(ACTIVE_TRACKERS_KEY, 'session');
   return data ?? {};
+};
+
+const saveTrackerState = async (cityName: string, state: ActiveTrackersMap[string]): Promise<void> => {
+  await updateItem<ActiveTrackersMap>(
+    ACTIVE_TRACKERS_KEY,
+    { [cityName]: state },
+    'session'
+  );
 };
 
 const setAlarm = async (cityName: string, interval: number): Promise<void> => {
@@ -42,7 +50,7 @@ export const startTracker = async (
   countryCode: string,
   interval: PollingInterval
 ): Promise<boolean> => {
-  const tab = await openDepartmentTab(city.url);
+  const tab = await openTabWithUrl(city.url);
   if (!tab?.id) return false;
 
   await clearSlotsForCity(city.name);
@@ -55,19 +63,13 @@ export const startTracker = async (
     return true;
   }
 
-  await updateItem<ActiveTrackersMap>(
-    ACTIVE_TRACKERS_KEY,
-    {
-      [city.name]: {
-        cityName: city.name,
-        countryCode,
-        tabId: tab.id,
-        intervalMinutes: interval,
-        nextCheckTimestamp: Date.now() + interval * 60_000,
-      },
-    },
-    'session'
-  );
+  await saveTrackerState(city.name, {
+    cityName: city.name,
+    countryCode,
+    tabId: tab.id,
+    intervalMinutes: interval,
+    nextCheckTimestamp: Date.now() + interval * 60_000,
+  });
 
   await setAlarm(city.name, interval);
   return true;
@@ -81,17 +83,11 @@ export const updateTrackerInterval = async (
   const current = trackers[cityName];
   if (!current) return;
 
-  await updateItem<ActiveTrackersMap>(
-    ACTIVE_TRACKERS_KEY,
-    {
-      [cityName]: {
-        ...current,
-        intervalMinutes: interval,
-        nextCheckTimestamp: Date.now() + interval * 60_000,
-      },
-    },
-    'session'
-  );
+  await saveTrackerState(cityName, {
+    ...current,
+    intervalMinutes: interval,
+    nextCheckTimestamp: Date.now() + interval * 60_000,
+  });
 
   await setAlarm(cityName, interval);
 };
@@ -108,22 +104,20 @@ export const handleTrackerAlarm = async (cityName: string): Promise<void> => {
   }
 
   const slots = await checkAvailableSlots(tracker.tabId);
-  if (slots && slots.length > 0) {
+  if (slots === null) {
+    return stopTracker(cityName);
+  }
+
+  if (slots.length > 0) {
     await stopTracker(cityName);
     await notifySlots(cityName, tracker.tabId, slots);
     return;
   }
 
-  await updateItem<ActiveTrackersMap>(
-    ACTIVE_TRACKERS_KEY,
-    {
-      [cityName]: {
-        ...tracker,
-        nextCheckTimestamp: Date.now() + tracker.intervalMinutes * 60_000,
-      },
-    },
-    'session'
-  );
+  await saveTrackerState(cityName, {
+    ...tracker,
+    nextCheckTimestamp: Date.now() + tracker.intervalMinutes * 60_000,
+  });
 };
 
 export const handleTabClosed = async (closedTabId: number): Promise<void> => {
