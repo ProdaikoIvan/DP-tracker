@@ -3,6 +3,7 @@ import { startBadgeBlinking } from '@/services/badgeService';
 import { playNotificationSoundInTab } from '@/services/soundService';
 import { openDepartmentTab } from '@/features/department';
 import { checkAvailableSlots, saveFoundSlots, clearSlotsForCity } from '@/features/slots';
+import { sendTelegramNotification } from '@/features/telegram';
 import { ACTIVE_TRACKERS_KEY, TRACKER_ALARM_PREFIX } from '@/constants/storage.constants';
 import type { ActiveTrackersMap, PollingInterval } from '../types/tracker.types';
 import type { City } from '@/features/department';
@@ -28,6 +29,7 @@ const notifySlots = async (cityName: string, tabId: number, slots: SlotDay[]): P
   await saveFoundSlots(cityName, slots);
   await startBadgeBlinking();
   await playNotificationSoundInTab(tabId);
+  void sendTelegramNotification(cityName, slots);
 };
 
 export const stopTracker = async (cityName: string): Promise<void> => {

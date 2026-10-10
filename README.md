@@ -12,6 +12,7 @@ Booking an appointment for passport and document services at "DP Document" cente
 * **Background Monitoring:** Continuously checks for open appointment dates at user-defined intervals (e.g., every 1, 2, 3, or 5 minutes) without requiring manual page reloads.
 * **Smart Session Injection:** Leverages the active tab's session to query the queue directly, bypassing anti-bot restrictions and maintaining legitimate session headers.
 * **Instant Alerts:** Triggers a pleasant polyphonic audio alert (Web Audio API) and a blinking badge on the extension icon as soon as free slots are detected.
+* **Telegram Push Notifications:** 1-click connection to a Telegram Bot ([Cloudflare Worker + D1 Database](./worker/README.md)) for instant alerts on mobile and desktop devices.
 * **Multi-City Support:** Allows tracking multiple service centers simultaneously with live countdown timers.
 * **Directory & Auto-Detection:** Includes a built-in searchable catalog of all official centers (Ukraine, Poland, Czech Republic, Germany, Slovakia, Spain, Italy, etc.) and auto-detects the active center when browsing `pasport.org.ua`.
 
@@ -27,9 +28,16 @@ Booking an appointment for passport and document services at "DP Document" cente
   * `chrome.storage.local` — Persistent state and found slots caching
   * `chrome.tabs` — Active tab synchronization and lifecycle monitoring
   * `chrome.action` — Dynamic extension badge alerts
+* **Serverless Backend:** [Cloudflare Workers](https://workers.cloudflare.com/) + [Cloudflare D1 SQL Database](https://developers.cloudflare.com/d1/) (Telegram Webhook & Notifications)
 * **Styling:** CSS Modules with centralized CSS Custom Properties (design tokens)
 * **Audio:** Web Audio API (synthesized chime notifications without external assets)
 * **Icons & Assets:** [Lucide React](https://lucide.dev/), [country-flag-icons](https://purecatamphetamine.github.io/country-flag-icons/)
+
+---
+
+## 📱 Telegram Notifications Setup
+
+Detailed instructions for setting up and deploying the Telegram bot and Cloudflare Worker with D1 can be found in the [Worker Documentation](./worker/README.md).
 
 ---
 

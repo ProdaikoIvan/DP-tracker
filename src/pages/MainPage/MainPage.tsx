@@ -6,10 +6,12 @@ import { NOTIFICATIONS_SOUND_KEY } from '@/constants/storage.constants';
 import { DepartmentsList, useDepartmentSelection } from '@/features/department';
 import { TrackerView, ActiveTrackersList, useActiveTrackers, stopTracker } from '@/features/tracker';
 import { SlotsModal, AllSlotsList, useSlots, clearAllSlotsData, clearSlotsForCity } from '@/features/slots';
+import { SettingsModal } from '@/features/settings';
 import type { ConfirmModalConfig } from './MainPage.types';
 
 const MainPage: React.FC = () => {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<ConfirmModalConfig | null>(null);
 
   const { selectedDepartment, selectDepartment } = useDepartmentSelection();
@@ -53,6 +55,7 @@ const MainPage: React.FC = () => {
         <Header
           onReset={handleOpenResetConfirm}
           onOpenStats={() => setIsStatsModalOpen(true)}
+          onOpenSettings={() => setIsSettingsModalOpen(true)}
           servicesCount={servicesWithSlotsCount}
           isSoundEnabled={isSoundEnabled}
           onToggleSound={handleToggleSound}
@@ -76,6 +79,11 @@ const MainPage: React.FC = () => {
               onDeleteSlot={handleOpenDeleteCityConfirm}
             />
           </SlotsModal>
+
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            onClose={() => setIsSettingsModalOpen(false)}
+          />
 
           <ConfirmModal
             isOpen={Boolean(confirmConfig)}
